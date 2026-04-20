@@ -131,9 +131,8 @@
     const form = document.getElementById('form-objednavka');
     const odeslatBtn = document.getElementById('odeslat-btn');
 
-    // --- FORMÁTOVÁNÍ (CZ & SK jsou stejné: 000 000 000 a 000 00) ---
+    // --- FORMÁTOVÁNÍ VSTUPŮ ---
     function formatujVstupy() {
-        // Telefon: 123 456 789
         let telVal = telInput.value.replace(/\D/g, ''); 
         let telFormatted = "";
         for (let i = 0; i < telVal.length; i++) {
@@ -142,7 +141,6 @@
         }
         telInput.value = telFormatted.substring(0, 11);
 
-        // PSČ: 123 45
         let pscVal = pscInput.value.replace(/\D/g, '');
         if (pscVal.length > 3) {
             pscInput.value = (pscVal.slice(0, 3) + " " + pscVal.slice(3, 5)).trim();
@@ -150,16 +148,14 @@
             pscInput.value = pscVal;
         }
 
-        // Validace tlačítka
         odeslatBtn.disabled = !form.checkValidity();
     }
 
-    // Při změně předvolby jen pro jistotu znovu zvalidujeme (netřeba mazat pole, když mají stejný formát)
     predvolbaInput.addEventListener('change', formatujVstupy);
     telInput.addEventListener('input', formatujVstupy);
     pscInput.addEventListener('input', formatujVstupy);
 
-    // --- NAČTENÍ KOŠÍKU ---
+    // --- NAČTENÍ KOŠÍKU (Obrázky ze složky img/) ---
     const kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];
     const seznamDiv = document.getElementById('seznam-polozek');
     let celkovaSuma = 0;
@@ -168,11 +164,25 @@
         window.location.href = 'index.html'; 
     }
 
+    seznamDiv.innerHTML = ""; 
     kosik.forEach(p => {
         celkovaSuma += p.cena;
+
+        // Kontrola cesty obrázku:
+        let nazevObrazku = p.obrazek || 'placeholder.jpg';
+        let finalniCesta;
+
+        // Pokud název už obsahuje "img/" nebo je to odkaz (http), necháme ho být.
+        // Jinak přidáme "img/" na začátek.
+        if (nazevObrazku.includes('img/') || nazevObrazku.startsWith('http')) {
+            finalniCesta = nazevObrazku;
+        } else {
+            finalniCesta = 'img/' + nazevObrazku;
+        }
+
         seznamDiv.innerHTML += `
             <div class="polozka-mini">
-                <img src="${p.obrazek || 'placeholder.jpg'}" alt="${p.nazev}">
+                <img src="${finalniCesta}" alt="${p.nazev}" onerror="this.src='placeholder.jpg'">
                 <div class="polozka-info"><strong>${p.nazev}</strong></div>
                 <div class="polozka-cena">${p.cena.toLocaleString()} Kč</div>
             </div>`;
@@ -192,7 +202,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // --- ODESLÁNÍ ---
+    // --- ODESLÁNÍ OBJEDNÁVKY ---
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         odeslatBtn.innerText = "Odesílám...";
@@ -216,13 +226,12 @@
                 document.getElementById('success-overlay').style.display = 'flex';
                 window.scrollTo(0, 0);
             }).catch(err => {
-                alert("Chyba při odesílání.");
+                alert("Chyba při odesílání: " + JSON.stringify(err));
                 odeslatBtn.disabled = false;
                 odeslatBtn.innerText = "Odeslat objednávku";
             });
     });
 
-    // Spustit kontrolu na začátku
     formatujVstupy();
 </script>
 
