@@ -36,7 +36,6 @@
         .btn { display: block; width: 100%; padding: 15px; border: none; cursor: pointer; border-radius: 8px; font-weight: bold; text-align: center; text-decoration: none; transition: 0.3s; font-size: 1rem; box-sizing: border-box; margin-top: 10px; }
         .btn-finish { background: #28a745; color: white; }
         .btn-finish:disabled { background: #ccc; cursor: not-allowed; }
-        .btn-zpet { background: #6c757d; color: white; }
         .btn-error { background: #e74c3c; color: white; }
 
         #success-overlay, #error-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
@@ -76,7 +75,6 @@
                 <div class="radek-formu" style="flex: 1;"><label>PSČ</label><input type="text" id="psc" required></div>
             </div>
             <button type="submit" id="odeslat-btn" class="btn btn-finish" disabled>Odeslat objednávku</button>
-            <a href="kosik.html" class="btn btn-zpet">Upravit košík</a>
         </form>
     </div>
 
@@ -91,13 +89,15 @@
 
 <div id="error-overlay">
     <div class="bublina">
-        <h2 style="color: #e74c3c;">⚠️ Změna dostupnosti</h2>
+        <h2 style="color: #e74c3c;">⚠️ Vyprodáno</h2>
         <p id="error-message"></p>
-        <button id="btn-vymazat-error" class="btn btn-error">Smazat košík a jít nakupovat</button>
+        <p>Váš košík byl smazán, protože zboží již není dostupné.</p>
+        <a href="index.html" class="btn btn-error">Zpět na hlavní stránku</a>
     </div>
 </div>
 
 <script>
+    // Inicializace Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyB0AsPToca13UPI9BzR_5nj5scqZwnhOxo",
         authDomain: "pc-store-5656d.firebaseapp.com",
@@ -112,24 +112,11 @@
 
     const form = document.getElementById('form-objednavka');
     const odeslatBtn = document.getElementById('odeslat-btn');
-    const errorBtn = document.getElementById('btn-vymazat-error');
-
-    // Funkce pro smazání, která zaručeně funguje
-    function vynuceneSmazani() {
-        console.log("Vynucené smazání košíku...");
-        localStorage.setItem('mujKosik', JSON.stringify([])); // Nejdřív ho vyprázdni
-        localStorage.removeItem('mujKosik'); // Pak ho smaž
-        window.location.replace('produkty.html'); // Přesměrování bez možnosti jít "zpět" na chybu
-    }
-
-    // Přiřazení funkce tlačítku v bublině
-    errorBtn.addEventListener('click', vynuceneSmazani);
-
-    // Zobrazení obsahu
     const kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];
+
+    // Vykreslení košíku
     let celkem = 0;
     const seznamDiv = document.getElementById('seznam-polozek');
-    
     kosik.forEach(p => {
         celkem += p.cena;
         seznamDiv.innerHTML += `<div class="polozka-mini"><span>${p.nazev}</span><span class="polozka-cena">${p.cena.toLocaleString()} Kč</span></div>`;
@@ -148,18 +135,25 @@
             let problem = [];
 
             kosik.forEach(p => {
+                // Pokud produkt v databázi chybí nebo je 0
                 if (!sklad[p.dbKey] || sklad[p.dbKey] <= 0) {
                     problem.push(p.nazev);
                 }
             });
 
             if (problem.length > 0) {
-                document.getElementById('error-message').innerText = "Tyto produkty už nejsou skladem: " + problem.join(", ");
+                // --- KLÍČOVÁ ZMĚNA ZDE: SMAZAT HNED ---
+                console.log("Zboží není skladem. Mažu košík okamžitě.");
+                localStorage.removeItem('mujKosik');
+                localStorage.setItem('mujKosik', JSON.stringify([]));
+                
+                document.getElementById('error-message').innerText = "Omlouváme se, tyto produkty už někdo koupil: " + problem.join(", ");
                 document.getElementById('error-overlay').style.display = 'flex';
-                odeslatBtn.disabled = false;
+                
+                // Tlačítko už nic nemazat nemusí, je hotovo. Jen resetujeme vizuál.
                 odeslatBtn.innerText = "Odeslat objednávku";
             } else {
-                // Odeslání
+                // Vše v pořádku -> Odeslání
                 const params = {
                     user_name: document.getElementById('jmeno').value,
                     user_email: document.getElementById('email').value,
@@ -173,6 +167,10 @@
                     document.getElementById('success-overlay').style.display = 'flex';
                 });
             }
+        }).catch(err => {
+            console.error("Firebase error:", err);
+            alert("Chyba při kontrole skladu.");
+            odeslatBtn.disabled = false;
         });
     });
 </script>
