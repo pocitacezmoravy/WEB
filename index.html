@@ -154,36 +154,38 @@
             transition: opacity 0.3s; 
         }
 
-        /* --- RESPONSIVITA (Mobilní zařízení) --- */
-         @media (max-width: 768px) {
+        /* --- UPRAVENÁ RESPONSIVITA --- */
+        @media (max-width: 768px) {
             header .container { position: relative; }
             .menu-toggle { display: flex; }
             .logo img { height: 45px; }
-            .logo h1 { font-size: 1.2rem; }
-            header {
-        padding: 0.8rem 0; /* Jednotná výška celé lišty */
-                 }  
+            .logo h1 { font-size: 1.1rem; }
+            header { padding: 0.8rem 0; }
 
             nav { 
                 display: none; 
                 flex-direction: column; 
                 position: absolute; 
                 top: 100%; 
-                left: -20px; 
-                width: calc(100% + 40px); 
+                left: -20px; /* Zarovnání k úplnému okraji obrazovky přes záporný margin containeru */
+                width: calc(100% + 40px); /* Roztažení přes celou šířku displeje */
                 background: #2c3e50; 
-                padding: 10px 0; 
+                padding: 0; /* Zrušení vnitřního odsazení */
                 text-align: center; 
                 box-shadow: 0 5px 10px rgba(0,0,0,0.2); 
             }
             nav.active { display: flex; }
+            
             nav a { 
                 margin: 0; 
-                padding: 15px; 
+                padding: 20px; /* Větší plocha pro kliknutí */
                 font-size: 1.1rem; 
                 border-bottom: 1px solid rgba(255,255,255,0.1); 
-                display: block;
+                display: block; /* Zajistí šířku 100% pro odkaz */
+                width: 100%; /* Explicitní šířka */
+                box-sizing: border-box;
             }
+            nav a:last-child { border-bottom: none; }
 
             .hero { padding: 30px 15px; margin-bottom: 20px; }
             .hero h2 { font-size: 1.6rem; }
@@ -192,13 +194,6 @@
                 grid-template-columns: 1fr; 
                 gap: 20px; 
                 padding: 0 10px;
-            }
-            
-            #bublina {
-                left: 20px;
-                right: 20px;
-                bottom: 20px;
-                text-align: center;
             }
         }
     </style>
@@ -272,7 +267,6 @@
 <div id="bublina"></div>
 
 <script>
-    // Firebase Konfigurace
     const firebaseConfig = {
         apiKey: "AIzaSyB0AsPToca13UPI9BzR_5nj5scqZwnhOxo",
         authDomain: "pc-store-5656d.firebaseapp.com",
@@ -285,33 +279,23 @@
     
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-
     const produktyKlice = ['PC_1', 'PC_2', 'PC_3'];
     
-    // Načítání dat z Firebase v reálném čase
     db.ref('produkty').on('value', (snapshot) => {
         const produkty = snapshot.val() || {};
-        
         produktyKlice.forEach(klic => {
             const pc = produkty[klic];
             if(!pc) return;
-
             const nazevEl = document.getElementById('nazev-' + klic);
             const infoEl = document.getElementById('sklad-' + klic);
             const cenaEl = document.getElementById('cena-' + klic);
             const btnEl = document.getElementById('btn-' + klic);
-            
             if(nazevEl) nazevEl.innerText = pc.nazev;
-
             if(infoEl) {
                 infoEl.innerText = pc.sklad > 0 ? `Skladem: ${pc.sklad} ks` : "Vyprodáno";
                 infoEl.style.color = pc.sklad > 0 ? "#28a745" : "#e74c3c";
             }
-
-            if(cenaEl) {
-                cenaEl.innerText = pc.cena.toLocaleString('cs-CZ');
-            }
-
+            if(cenaEl) cenaEl.innerText = pc.cena.toLocaleString('cs-CZ');
             if(btnEl) {
                 if(pc.sklad <= 0) {
                     btnEl.disabled = true;
@@ -319,24 +303,15 @@
                 } else {
                     btnEl.disabled = false;
                     btnEl.innerText = "Do košíku";
-                    btnEl.onclick = () => {
-                        pridatDoKosiku(pc.nazev, pc.cena, `img/${klic}.jpg`, klic);
-                    };
+                    btnEl.onclick = () => pridatDoKosiku(pc.nazev, pc.cena, `img/${klic}.jpg`, klic);
                 }
             }
         });
     });
 
-    // Funkce košíku
     function pridatDoKosiku(nazev, cenaCislo, urlObrazku, dbKey) {
         let kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];
-        kosik.push({ 
-            nazev: nazev, 
-            cena: cenaCislo, 
-            obrazek: urlObrazku, 
-            dbKey: dbKey 
-        });
-        
+        kosik.push({ nazev: nazev, cena: cenaCislo, obrazek: urlObrazku, dbKey: dbKey });
         localStorage.setItem('mujKosik', JSON.stringify(kosik));
         aktualizovatPocitadlo();
         zobrazBublinu(nazev);
