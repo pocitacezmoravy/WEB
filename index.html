@@ -155,12 +155,14 @@
         }
 
         /* --- RESPONSIVITA (Mobilní zařízení) --- */
-        @media (max-width: 768px) {
+         @media (max-width: 768px) {
             header .container { position: relative; }
             .menu-toggle { display: flex; }
-            
             .logo img { height: 45px; }
             .logo h1 { font-size: 1.2rem; }
+            header {
+        padding: 0.8rem 0; /* Jednotná výška celé lišty */
+                 }  
 
             nav { 
                 display: none; 
