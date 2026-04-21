@@ -12,9 +12,41 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #f0f2f5; color: #333; }
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
         
-        header { background: #2c3e50; color: #fff; padding: 1rem 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        /* Zvětšený header pro velké logo */
+        header { 
+            background: #2c3e50; 
+            color: #fff; 
+            padding: 1.2rem 0; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        }
         header .container { display: flex; justify-content: space-between; align-items: center; }
-        .logo h1 { margin: 0; font-size: 1.4rem; letter-spacing: 1px; }
+
+        /* Styl pro VELKÉ logo a text */
+        .logo a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #fff;
+            transition: transform 0.2s ease;
+        }
+        .logo a:hover { transform: scale(1.02); }
+
+        .logo img {
+            height: 70px; /* Velikost loga */
+            width: auto;
+            margin-right: 15px;
+            display: block;
+        }
+
+        .logo h1 { 
+            margin: 0; 
+            font-size: 1.8rem; 
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
 
         /* Navigace Desktop */
         nav a { color: #fff; margin-left: 20px; text-decoration: none; font-weight: 500; transition: color 0.3s; }
@@ -37,7 +69,12 @@
 
         /* Responzivní menu pro mobil */
         @media (max-width: 768px) {
+            header { padding: 0.8rem 0; }
             .menu-toggle { display: flex; }
+
+            .logo img { height: 50px; }
+            .logo h1 { font-size: 1.3rem; }
+
             nav {
                 display: none;
                 flex-direction: column;
@@ -53,7 +90,6 @@
             nav.active { display: flex; }
             nav a { margin: 10px 0; margin-left: 0; display: block; font-size: 1.1rem; }
             
-            /* Úprava košíku pro mobil */
             .polozka { flex-direction: column; text-align: center; }
             .tlacitka-akce { flex-direction: column; }
             .btn-zpet { width: 100%; }
@@ -85,7 +121,12 @@
 
     <header>
         <div class="container">
-            <div class="logo"><h1>Počítače z Moravy</h1></div>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="img/logo.png" alt="Logo">
+                    <h1>Počítače z Moravy</h1>
+                </a>
+            </div>
             
             <div class="menu-toggle" id="mobile-menu">
                 <span></span>

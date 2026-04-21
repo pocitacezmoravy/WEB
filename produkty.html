@@ -17,10 +17,11 @@
             padding: 0 20px; 
         }
 
+        /* Zvětšený header pro velké logo */
         header { 
             background: #2c3e50; 
             color: #fff; 
-            padding: 1rem 0; 
+            padding: 1.2rem 0; 
             position: sticky; 
             top: 0; 
             z-index: 1000; 
@@ -33,7 +34,29 @@
             align-items: center; 
         }
 
-        .logo h1 { margin: 0; font-size: 1.4rem; letter-spacing: 1px; }
+        /* Styl pro VELKÉ logo a text */
+        .logo a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #fff;
+            transition: transform 0.2s ease;
+        }
+        .logo a:hover { transform: scale(1.02); }
+
+        .logo img {
+            height: 70px; /* Velikost loga */
+            width: auto;
+            margin-right: 15px;
+            display: block;
+        }
+
+        .logo h1 { 
+            margin: 0; 
+            font-size: 1.8rem; 
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
         
         /* Navigace - Desktop */
         nav a { color: #fff; margin-left: 20px; text-decoration: none; font-weight: 500; transition: color 0.3s; }
@@ -56,10 +79,14 @@
 
         /* Responzivní nastavení pro mobil */
         @media (max-width: 768px) {
+            header { padding: 0.8rem 0; }
             .menu-toggle { display: flex; }
+            
+            .logo img { height: 50px; } /* Na mobilu mírně zmenšíme */
+            .logo h1 { font-size: 1.3rem; }
 
             nav {
-                display: none; /* Skryje menu */
+                display: none; 
                 flex-direction: column;
                 position: absolute;
                 top: 100%;
@@ -71,7 +98,6 @@
                 box-shadow: 0 5px 10px rgba(0,0,0,0.2);
             }
 
-            /* Když je menu aktivní (po kliknutí) */
             nav.active { display: flex; }
 
             nav a {
@@ -177,7 +203,12 @@
 
 <header>
     <div class="container">
-        <div class="logo"><h1>Počítače z Moravy</h1></div>
+        <div class="logo">
+            <a href="index.html">
+                <img src="img/logo.jpg" alt="Logo">
+                <h1>Počítače z Moravy</h1>
+            </a>
+        </div>
         
         <div class="menu-toggle" id="mobile-menu">
             <span></span>
@@ -309,7 +340,6 @@
         localStorage.setItem('mujKosik', JSON.stringify(kosik));
         aktualizovatPocitadlo();
         zobrazBublinu(nazev);
-        // Volitelné: zavřít menu po přidání do košíku na mobilu
         navMenu.classList.remove('active');
     }
 

@@ -11,15 +11,40 @@
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #f0f2f5; color: #333; }
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-        header { background: #2c3e50; color: #fff; padding: 1rem 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        /* Zvětšený header pro větší logo */
+        header { background: #2c3e50; color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         header .container { display: flex; justify-content: space-between; align-items: center; }
-        .logo h1 { margin: 0; font-size: 1.4rem; letter-spacing: 1px; }
+        
+        /* Styl pro VELKÉ logo a název */
+        .logo a { 
+            display: flex; 
+            align-items: center; 
+            text-decoration: none; 
+            color: #fff; 
+            transition: transform 0.2s ease;
+        }
+        .logo a:hover { transform: scale(1.02); } /* Jemné zvětšení při najetí */
+        
+        .logo img { 
+            height: 70px; /* TADY nastavujete velikost loga */
+            width: auto; 
+            margin-right: 15px; 
+            display: block;
+        }
+        
+        .logo h1 { 
+            margin: 0; 
+            font-size: 1.8rem; /* Zvětšený text názvu k logu */
+            letter-spacing: 1px; 
+            font-weight: 700;
+        }
         
         /* Navigace */
         nav a { color: #fff; margin-left: 20px; text-decoration: none; font-weight: 500; transition: color 0.3s; }
         nav a:hover { color: #28a745; }
 
-        /* Mobilní menu tlačítko - schované na desktopu */
+        /* Mobilní menu tlačítko */
         .menu-toggle {
             display: none;
             flex-direction: column;
@@ -36,10 +61,14 @@
 
         /* Responzivita pro mobil */
         @media (max-width: 768px) {
+            header { padding: 1rem 0; }
             .menu-toggle { display: flex; }
             
+            .logo img { height: 50px; } /* Na mobilu trochu zmenšíme, aby se to vešlo */
+            .logo h1 { font-size: 1.3rem; }
+            
             nav {
-                display: none; /* Schováme menu */
+                display: none;
                 flex-direction: column;
                 position: absolute;
                 top: 100%;
@@ -50,13 +79,8 @@
                 text-align: center;
                 box-shadow: 0 5px 10px rgba(0,0,0,0.2);
             }
-
-            nav.active { display: flex; } /* Zobrazíme při aktivaci */
-            
-            nav a {
-                margin: 10px 0;
-                font-size: 1.2rem;
-            }
+            nav.active { display: flex; }
+            nav a { margin: 10px 0; font-size: 1.2rem; }
         }
 
         .hero { background: #fff; padding: 40px 0; text-align: center; border-bottom: 3px solid #28a745; margin-bottom: 40px; }
@@ -79,7 +103,12 @@
 
 <header>
     <div class="container">
-        <div class="logo"><h1>Počítače z Moravy</h1></div>
+        <div class="logo">
+            <a href="index.html">
+                <img src="img/logo.jpg" alt="Logo">
+                <h1>Počítače z Moravy</h1>
+            </a>
+        </div>
         
         <div class="menu-toggle" onclick="document.querySelector('nav').classList.toggle('active')">
             <span></span>
@@ -143,6 +172,7 @@
 <div id="bublina"></div>
 
 <script>
+    // Konfigurace Firebase (ponechána beze změny)
     const firebaseConfig = {
         apiKey: "AIzaSyB0AsPToca13UPI9BzR_5nj5scqZwnhOxo",
         authDomain: "pc-store-5656d.firebaseapp.com",
