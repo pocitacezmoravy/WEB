@@ -12,7 +12,6 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #f0f2f5; color: #333; }
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
         
-        /* Zvětšený header pro velké logo */
         header { 
             background: #2c3e50; 
             color: #fff; 
@@ -24,7 +23,6 @@
         }
         header .container { display: flex; justify-content: space-between; align-items: center; }
 
-        /* Styl pro VELKÉ logo a text */
         .logo a {
             display: flex;
             align-items: center;
@@ -35,7 +33,7 @@
         .logo a:hover { transform: scale(1.02); }
 
         .logo img {
-            height: 70px; /* Velikost loga */
+            height: 70px;
             width: auto;
             margin-right: 15px;
             display: block;
@@ -46,60 +44,17 @@
             font-size: 1.8rem; 
             letter-spacing: 1px;
             font-weight: 700;
+            color: #fff !important;
         }
 
-        /* Navigace Desktop */
         nav a { color: #fff; margin-left: 20px; text-decoration: none; font-weight: 500; transition: color 0.3s; }
         nav a:hover { color: #28a745; }
-
-        /* Hamburger Tlačítko */
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 5px;
-        }
-        .menu-toggle span {
-            display: block;
-            width: 25px;
-            height: 3px;
-            background: white;
-            border-radius: 2px;
-        }
-
-        /* Responzivní menu pro mobil */
-        @media (max-width: 768px) {
-            header { padding: 0.8rem 0; }
-            .menu-toggle { display: flex; }
-
-            .logo img { height: 50px; }
-            .logo h1 { font-size: 1.3rem; }
-
-            nav {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background: #2c3e50;
-                padding: 20px 0;
-                text-align: center;
-                box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-            }
-            nav.active { display: flex; }
-            nav a { margin: 10px 0; margin-left: 0; display: block; font-size: 1.1rem; }
-            
-            .polozka { flex-direction: column; text-align: center; }
-            .tlacitka-akce { flex-direction: column; }
-            .btn-zpet { width: 100%; }
-        }
 
         .cart-wrapper { max-width: 800px; margin: 40px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         h2 { border-bottom: 2px solid #f0f2f5; padding-bottom: 15px; margin-top: 0; color: #2c3e50; }
 
         .polozka { display: flex; align-items: center; padding: 20px 0; border-bottom: 1px solid #f0f2f5; gap: 20px; }
-        .polozka img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; background: #f9f9f9; border: 1px solid #eee; }
+        .polozka img { width: 100px; height: 80px; object-fit: contain; border-radius: 8px; background: #fff; border: 1px solid #eee; }
         .polozka-info { flex: 1; }
         .polozka-info strong { font-size: 1.1rem; color: #2c3e50; }
         
@@ -108,13 +63,13 @@
         .total { font-size: 1.6rem; font-weight: bold; text-align: right; margin-top: 30px; padding-top: 10px; color: #2c3e50; }
         .tlacitka-akce { display: flex; justify-content: space-between; margin-top: 30px; gap: 15px; }
         .btn { padding: 14px 24px; border: none; cursor: pointer; text-decoration: none; border-radius: 8px; font-weight: bold; transition: 0.3s; font-size: 0.95rem; text-align: center; flex: 1; }
-        .btn-zpet { background: #6c757d; color: white; flex: none; width: fit-content; margin: 0 auto; }
+        .btn-zpet { background: #6c757d; color: white; width: fit-content; margin: 0 auto; display: block; }
         .btn-smazat { background: #dc3545; color: white; }
         .btn-objednat { background: #28a745; color: white; }
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
         .prazdny-kosik { text-align: center; padding: 40px; color: #666; }
 
-        #bublina { position: fixed; bottom: 30px; right: 30px; background: #2c3e50; color: #fff; padding: 16px 24px; border-radius: 8px; display: none; z-index: 1001; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: opacity 0.3s; }
+        #bublina { position: fixed; bottom: 30px; right: 30px; background: #2c3e50; color: #fff; padding: 16px 24px; border-radius: 8px; display: none; z-index: 1001; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
@@ -127,17 +82,9 @@
                     <h1>Počítače z Moravy</h1>
                 </a>
             </div>
-            
-            <div class="menu-toggle" id="mobile-menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-
             <nav id="nav-menu">
                 <a href="index.html">Domů</a>
                 <a href="produkty.html">Produkty</a>
-                <a href="O_nas.html">O nás</a>
                 <a href="kosik.html" id="kosik-odkaz">Košík 🛒 (0)</a>
             </nav>
         </div>
@@ -158,8 +105,8 @@
                 </div>
             </div>
             
-            <div style="display: flex; justify-content: center; margin-top: 30px;">
-                <a href="index.html" class="btn btn-zpet">← Zpět k produktům</a>
+            <div style="margin-top: 30px;">
+                <a href="produkty.html" class="btn btn-zpet">← Zpět k produktům</a>
             </div>
         </div>
     </main>
@@ -167,13 +114,6 @@
     <div id="bublina"></div>
 
     <script>
-        // Mobilní menu logika
-        const mobileMenu = document.getElementById('mobile-menu');
-        const navMenu = document.getElementById('nav-menu');
-        mobileMenu.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
-
         const firebaseConfig = {
             apiKey: "AIzaSyB0AsPToca13UPI9BzR_5nj5scqZwnhOxo",
             authDomain: "pc-store-5656d.firebaseapp.com",
@@ -186,18 +126,11 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let casovacBubliny;
-
         function zobrazBublinu(text) {
             const bublina = document.getElementById('bublina');
             bublina.innerText = text;
             bublina.style.display = 'block';
-            bublina.style.opacity = '1';
-            clearTimeout(casovacBubliny);
-            casovacBubliny = setTimeout(() => {
-                bublina.style.opacity = '0';
-                setTimeout(() => { bublina.style.display = 'none'; }, 300);
-            }, 3000);
+            setTimeout(() => { bublina.style.display = 'none'; }, 3000);
         }
 
         function zobrazKosik() {
@@ -210,69 +143,41 @@
             if(kosikOdkaz) kosikOdkaz.innerText = 'Košík 🛒 (' + kosik.length + ')';
             
             if (kosik.length === 0) {
-                seznam.innerHTML = '<div class="prazdny-kosik"><h3>Váš košík je prázdný.</h3><p>Vyberte si některý z našich herních strojů!</p></div>';
+                seznam.innerHTML = '<div class="prazdny-kosik"><h3>Váš košík je prázdný.</h3></div>';
                 patka.style.display = 'none';
                 return;
             }
 
-            db.ref('/').once('value').then((snapshot) => {
-                const data = snapshot.val() || {};
-                const aktualniCeny = data.ceny || {};
+            db.ref('produkty').once('value').then((snapshot) => {
+                const produktyData = snapshot.val() || {};
                 
                 seznam.innerHTML = '';
                 let celkovaSuma = 0;
                 patka.style.display = 'block';
 
                 kosik.forEach((polozka, index) => {
-                    const cenaProVypocet = (aktualniCeny[polozka.dbKey] !== undefined) ? aktualniCeny[polozka.dbKey] : polozka.cena;
-                    celkovaSuma += cenaProVypocet;
+                    const produktVeFirebase = produktyData[polozka.dbKey];
+                    const aktualniCena = produktVeFirebase ? produktVeFirebase.cena : polozka.cena;
+                    celkovaSuma += aktualniCena;
                     
-                    const cestaKObrazku = `img/${polozka.dbKey}.jpg`;
+                    const formatovaneID = polozka.dbKey.replace('_', '');
+                    const cestaKObrazku = `img/${formatovaneID}.jpg`;
                     
                     seznam.innerHTML += `
                         <div class="polozka">
-                            <img src="${cestaKObrazku}" alt="${polozka.nazev}" onerror="this.src='https://via.placeholder.com/80?text=PC'">
+                            <img src="${cestaKObrazku}" alt="${polozka.nazev}" onerror="this.src='https://via.placeholder.com/100x80?text=PC'">
                             <div class="polozka-info">
                                 <strong>${polozka.nazev}</strong>
                             </div>
                             <div style="display: flex; align-items: center; gap: 20px;">
-                                <span class="cena-polozky">${cenaProVypocet.toLocaleString('cs-CZ')} Kč</span>
-                                <button onclick="odebratPolozku(${index}, '${polozka.nazev}')" style="background:none; border:none; color:#dc3545; cursor:pointer; font-size:1.5rem; padding: 0 5px;">&times;</button>
+                                <span class="cena-polozky">${aktualniCena.toLocaleString('cs-CZ')} Kč</span>
+                                <button onclick="odebratPolozku(${index}, '${polozka.nazev}')" style="background:none; border:none; color:#dc3545; cursor:pointer; font-size:1.5rem;">&times;</button>
                             </div>
                         </div>
                     `;
                 });
                 celkemElement.innerText = `Celkem: ${celkovaSuma.toLocaleString('cs-CZ')} Kč`;
-            }).catch(error => {
-                console.error("Firebase error:", error);
-                vykresliZLocalStorage(kosik);
             });
-        }
-
-        function vykresliZLocalStorage(kosik) {
-            const seznam = document.getElementById('seznam-polozek');
-            const celkemElement = document.getElementById('celkova-cena');
-            const patka = document.getElementById('patka-kosiku');
-            
-            seznam.innerHTML = '';
-            let celkovaSuma = 0;
-            patka.style.display = 'block';
-
-            kosik.forEach((polozka, index) => {
-                celkovaSuma += polozka.cena;
-                const cestaKObrazku = `img/${polozka.dbKey}.jpg`;
-                seznam.innerHTML += `
-                    <div class="polozka">
-                        <img src="${cestaKObrazku}" alt="${polozka.nazev}" onerror="this.src='https://via.placeholder.com/80?text=PC'">
-                        <div class="polozka-info"><strong>${polozka.nazev}</strong></div>
-                        <div style="display: flex; align-items: center; gap: 20px;">
-                            <span class="cena-polozky">${polozka.cena.toLocaleString('cs-CZ')} Kč</span>
-                            <button onclick="odebratPolozku(${index}, '${polozka.nazev}')" style="background:none; border:none; color:#dc3545; cursor:pointer; font-size:1.5rem;">&times;</button>
-                        </div>
-                    </div>
-                `;
-            });
-            celkemElement.innerText = `Celkem: ${celkovaSuma.toLocaleString('cs-CZ')} Kč`;
         }
 
         function odebratPolozku(index, nazev) {
@@ -280,13 +185,13 @@
             kosik.splice(index, 1);
             localStorage.setItem('mujKosik', JSON.stringify(kosik));
             zobrazKosik();
-            zobrazBublinu(`🗑️ ${nazev} byl odebrán`);
+            zobrazBublinu(`Odebráno: ${nazev}`);
         }
 
         function vyprazdnitKosik() {
             localStorage.removeItem('mujKosik');
             zobrazKosik();
-            zobrazBublinu("🗑️ Košík byl vyprázdněn");
+            zobrazBublinu("Košík byl vyprázdněn");
         }
 
         window.onload = zobrazKosik;
