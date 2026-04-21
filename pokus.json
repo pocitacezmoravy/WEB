@@ -1,12 +1,44 @@
 {
-  "sklad": {
-    "PC1": 5,
-    "PC2": 10,
-    "PC3": 3
-  },
-  "ceny": {
-    "PC1": 24499,
-    "PC2": 12999,
-    "PC3": 18500
+  "produkty": {
+    "PC1": {
+      "nazev": "Herní Bestie i7",
+      "cena": 24999,
+      "procesor": "Intel Core i7 (12. generace)",
+      "grafika": "NVIDIA GeForce RTX řady 30",
+      "ram": "16GB DDR4 RAM",
+      "disk": "1TB NVMe SSD",
+      "chlazení": "RGB Air Cooler / LED podsvícení",
+      "skříň": "Mid Tower s RGB osvětlením",
+      "Základní deska": "ASUS / MSI Gaming Board",
+      "Záruka": "24 měsíců",
+      "sklad": 1
+    },
+    "PC2": {
+      "nazev": "Kancelářský profík",
+      "cena": 12999,
+      "procesor": "Intel Core i5 (12. generace)",
+      "grafika": "Integrovaná Intel UHD",
+      "ram": "8GB DDR4 RAM",
+      "disk": "512GB NVMe SSD",
+      "chlazení": "RGB Air Cooler / LED podsvícení",
+      "skříň": "Mid Tower s RGB osvětlením",
+      "Základní deska": "ASUS / MSI Gaming Board",
+      "Záruka": "24 měsíců",
+      "sklad": 1
+    },
+    "PC3": {
+      "nazev": "Stylový notebook",
+      "cena": 24999,
+      "procesor": "Intel Core i5 (12. generace)",
+      "grafika": "Integrovaná Intel UHD",
+      "ram": "8GB DDR4 RAM",
+      "disk": "512GB NVMe SSD",
+      "chlazení": "RGB Air Cooler / LED podsvícení",
+      "skříň": "Mid Tower s RGB osvětlením",
+      "Základní deska": "ASUS / MSI Gaming Board",
+      "Záruka": "24 měsíců",
+      "sklad": 1
+    },
+    
   }
 }
