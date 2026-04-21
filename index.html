@@ -24,7 +24,7 @@
             padding: 0 20px; 
         }
 
-        /* --- HLAVIČKA --- */
+        /* --- VYLEPŠENÁ HLAVIČKA S HAMBURGEREM --- */
         header { 
             background: #2c3e50; 
             color: #fff; 
@@ -39,7 +39,6 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            position: relative;
         }
 
         .logo h1 { 
@@ -64,14 +63,12 @@
 
         nav a:hover { color: #28a745; }
 
-        /* --- MOBILNÍ HAMBURGER (Tlačítko) --- */
+        /* Tlačítko hamburgeru - schované na PC */
         .menu-toggle {
             display: none;
             flex-direction: column;
             cursor: pointer;
             gap: 5px;
-            padding: 5px;
-            z-index: 1001;
         }
 
         .menu-toggle span {
@@ -83,48 +80,43 @@
             transition: 0.3s;
         }
 
-        /* Animace křížku při otevření */
-        .menu-toggle.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-        .menu-toggle.open span:nth-child(2) { opacity: 0; }
-        .menu-toggle.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-
         /* --- MOBILNÍ STYLY --- */
         @media (max-width: 768px) {
             .menu-toggle {
-                display: flex;
+                display: flex; /* Zobrazit na mobilu */
             }
 
             nav {
-                display: none;
+                display: none; /* Schovat menu na mobilu */
                 flex-direction: column;
                 position: absolute;
-                top: 100%;
+                top: 100%; /* Hned pod hlavičku */
                 left: 0;
                 width: 100%;
                 background: #2c3e50;
-                padding: 10px 0;
+                padding: 20px 0;
                 box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-                border-top: 1px solid rgba(255,255,255,0.1);
             }
 
             nav.active {
-                display: flex;
+                display: flex; /* Zobrazit při kliknutí */
             }
 
             nav a {
                 margin: 0;
-                padding: 15px 25px;
+                padding: 15px 20px;
                 width: 100%;
                 box-sizing: border-box;
-                border-bottom: 1px solid rgba(255,255,255,0.05);
+                border-bottom: 1px solid rgba(255,255,255,0.1);
             }
 
             #pocitadlo-odkaz {
-                color: #28a745 !important;
+                color: #28a745;
+                font-weight: bold;
             }
         }
 
-        /* Produkty a zbytek */
+        /* Ostatní styly zůstávají */
         .hero { background: #fff; padding: 40px 0; text-align: center; border-bottom: 3px solid #28a745; margin-bottom: 40px; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-bottom: 60px; }
         .product-card { background: white; padding: 25px; border-radius: 12px; text-align: center; transition: all 0.3s ease; display: flex; flex-direction: column; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
@@ -135,7 +127,7 @@
         .btn-secondary { background: #e9ecef; color: #2c3e50; border: 1px solid #dee2e6; }
         .sklad-info { font-size: 0.85rem; margin-bottom: 5px; font-weight: bold; }
         .cena-text { font-size: 1.2rem; color: #2c3e50; margin-bottom: 10px; }
-        #bublina { position: fixed; bottom: 30px; right: 30px; background: #2c3e50; color: #fff; padding: 16px 24px; border-radius: 8px; display: none; z-index: 2000; }
+        #bublina { position: fixed; bottom: 30px; right: 30px; background: #2c3e50; color: #fff; padding: 16px 24px; border-radius: 8px; display: none; z-index: 1001; }
     </style>
 </head>
 <body>
@@ -176,7 +168,7 @@
                 <h3>Herní Bestie i7</h3>
             </a>
             <p class="sklad-info" id="sklad-PC1">Načítání skladu...</p>
-            <p class="cena-text"><strong id="cena-PC1">----</strong> Kč</p>
+            <p class="cena-text"><strong id="cena-PC1">----</strong> <strong>Kč</strong></p>
             <a href="PC_1.html" class="btn btn-secondary">Specifikace</a>
             <button class="btn btn-primary" id="btn-PC1" onclick="pridatDoKosiku('Herní Bestie i7', 'cena-PC1', 'https://i.postimg.cc/0y138rQK/PC1.jpg', 'PC1')">Do košíku</button>
         </article>
@@ -187,7 +179,7 @@
                 <h3>Kancelářský Profík</h3>
             </a>
             <p class="sklad-info" id="sklad-PC2">Načítání skladu...</p>
-            <p class="cena-text"><strong id="cena-PC2">----</strong> Kč</p>
+            <p class="cena-text"><strong id="cena-PC2">----</strong> <strong>Kč</strong></p>
             <a href="PC_2.html" class="btn btn-secondary">Specifikace</a>
             <button class="btn btn-primary" id="btn-PC2" onclick="pridatDoKosiku('Kancelářský Profík', 'cena-PC2', 'https://i.postimg.cc/0y138rQK/PC1.jpg', 'PC2')">Do košíku</button>
         </article>
@@ -203,18 +195,16 @@
 
     menuToggle.addEventListener('click', () => {
         navMenu.classList.toggle('active');
-        menuToggle.classList.toggle('open'); // Přidá animaci křížku
     });
 
-    // Zavřít menu po kliknutí na odkaz
+    // Zavřít menu, když se klikne na odkaz (důležité pro jednostránkové weby)
     document.querySelectorAll('nav a').forEach(link => {
         link.addEventListener('click', () => {
             navMenu.classList.remove('active');
-            menuToggle.classList.remove('open');
         });
     });
 
-    /* --- FIREBASE A KOŠÍK --- */
+    /* --- FIREBASE A KOŠÍK (Původní logika) --- */
     const firebaseConfig = {
         apiKey: "AIzaSyB0AsPToca13UPI9BzR_5nj5scqZwnhOxo",
         authDomain: "pc-store-5656d.firebaseapp.com",
@@ -248,8 +238,7 @@
     });
 
     function pridatDoKosiku(nazev, cenaId, img, key) {
-        const cenaText = document.getElementById(cenaId).innerText.replace(/\s/g, '');
-        const cena = parseInt(cenaText) || 0;
+        const cena = parseInt(document.getElementById(cenaId).innerText.replace(/\s/g, '')) || 0;
         let kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];
         kosik.push({ nazev, cena, obrazek: img, dbKey: key });
         localStorage.setItem('mujKosik', JSON.stringify(kosik));
@@ -263,8 +252,7 @@
 
     function aktualizovatPocitadlo() {
         let kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];
-        const el = document.getElementById('pocitadlo-odkaz');
-        if(el) el.innerText = `Košík 🛒 (${kosik.length})`;
+        document.getElementById('pocitadlo-odkaz').innerText = `Košík 🛒 (${kosik.length})`;
     }
 
     window.onload = aktualizovatPocitadlo;
