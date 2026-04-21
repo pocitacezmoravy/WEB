@@ -30,7 +30,13 @@
             padding: 0 20px;
         }
 
-        .logo h1 { margin: 0; font-size: 1.4rem; letter-spacing: 1px; }
+        /* OPRAVA: Logo bude vždy bílé */
+        .logo h1 { 
+            margin: 0; 
+            font-size: 1.4rem; 
+            letter-spacing: 1px; 
+            color: #ffffff !important; 
+        }
 
         /* Navigace - Desktop */
         nav a { color: #fff; margin-left: 20px; text-decoration: none; font-weight: 500; transition: color 0.3s; }
@@ -54,7 +60,6 @@
         /* Mobilní verze menu */
         @media (max-width: 768px) {
             .menu-toggle { display: flex; }
-
             nav {
                 display: none;
                 flex-direction: column;
@@ -67,9 +72,7 @@
                 text-align: center;
                 box-shadow: 0 5px 10px rgba(0,0,0,0.2);
             }
-
             nav.active { display: flex; }
-
             nav a {
                 margin: 10px 0;
                 margin-left: 0;
@@ -93,7 +96,6 @@
 
         @media (max-width: 768px) {
             .detail-karta { grid-template-columns: 1fr; gap: 20px; }
-            h1 { font-size: 1.6rem; }
         }
 
         .foto-sekce img { 
@@ -103,7 +105,9 @@
             background: #fff;
         }
 
-        h1 { color: #2c3e50; margin: 0 0 10px 0; font-size: 2rem; }
+        /* OPRAVA: Název počítače bude černý */
+        h1 { color: #333333; margin: 0 0 10px 0; font-size: 2rem; }
+        
         .kategorie { color: #28a745; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
         
         .parametry-tabulka { 
@@ -210,7 +214,7 @@
 <div id="bublina"></div>
 
 <script>
-    // Mobilní menu logika
+    // (Zbytek JavaScriptu zůstává beze změny...)
     const mobileMenu = document.getElementById('mobile-menu');
     const navMenu = document.getElementById('nav-menu');
 
@@ -218,7 +222,6 @@
         navMenu.classList.toggle('active');
     });
 
-    // Firebase konfigurace
     const firebaseConfig = {
         apiKey: "AIzaSyB0AsPToca13UPI9BzR_5nj5scqZwnhOxo",
         authDomain: "pc-store-5656d.firebaseapp.com",
@@ -233,7 +236,6 @@
 
     const PRODUCT_ID = 'PC1'; 
 
-    // Načítání ceny a skladu z Firebase
     db.ref('/').on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -263,17 +265,13 @@
         }
     });
 
-    // Funkce košíku
     let casovacBubliny;
-
     function pridatDoKosiku(nazev, cenaElementId, urlObrazku, dbKey) {
         const cenaText = document.getElementById('cena-' + cenaElementId).innerText.replace(/\s/g, '');
         const cenaCislo = parseInt(cenaText) || 0;
-
         let kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];
         kosik.push({ nazev: nazev, cena: cenaCislo, obrazek: urlObrazku, dbKey: dbKey });
         localStorage.setItem('mujKosik', JSON.stringify(kosik));
-        
         aktualizovatPocitadlo();
         zobrazBublinu(nazev);
     }
@@ -295,7 +293,6 @@
         const pocitadlo = document.getElementById('pocitadlo-kosiku');
         if (pocitadlo) pocitadlo.innerText = `Košík 🛒 (${kosik.length})`;
     }
-
     window.onload = aktualizovatPocitadlo;
 </script>
 
