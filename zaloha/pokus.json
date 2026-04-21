@@ -1,7 +1,12 @@
 {
   "sklad": {
-    "herni_bestie": 5,
-    "kancelarsky_profik": 10,
-    "notebook": 3
+    "PC1": 5,
+    "PC2": 10,
+    "PC3": 3
+  },
+  "ceny": {
+    "PC1": 24499,
+    "PC2": 12999,
+    "PC3": 18500
   }
 }

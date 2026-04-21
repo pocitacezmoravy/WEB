@@ -4,93 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Váš Košík | Počítače z Moravy</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
     <style>
-        /* Sjednocení stylu */
-        body { font-family: sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #f4f4f4; }
-        header { background: #333; color: #fff; padding: 1rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; }
-        nav a { color: #fff; margin-left: 15px; text-decoration: none; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #f0f2f5; color: #333; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        header { background: #2c3e50; color: #fff; padding: 1rem 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo h1 { margin: 0; font-size: 1.4rem; letter-spacing: 1px; }
+        nav a { color: #fff; margin-left: 20px; text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        nav a:hover { color: #28a745; }
+
+        .cart-wrapper { max-width: 800px; margin: 40px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        h2 { border-bottom: 2px solid #f0f2f5; padding-bottom: 15px; margin-top: 0; color: #2c3e50; }
+
+        .polozka { display: flex; align-items: center; padding: 20px 0; border-bottom: 1px solid #f0f2f5; gap: 20px; }
+        .polozka img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; background: #f9f9f9; border: 1px solid #eee; }
+        .polozka-info { flex: 1; }
+        .polozka-info strong { font-size: 1.1rem; color: #2c3e50; }
         
-        .container { max-width: 800px; margin: 40px auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h2 { border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .cena-polozky { font-weight: bold; color: #28a745; white-space: nowrap; font-size: 1.1rem; }
 
-        .polozka { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #ddd; }
-        .polozka:last-child { border-bottom: none; }
-        .cena-polozky { font-weight: bold; color: #28a745; }
-
-        .total { font-size: 1.5rem; font-weight: bold; text-align: right; margin-top: 20px; padding-top: 10px; border-top: 3px double #333; }
-
-        .tlacitka-akce { display: flex; justify-content: space-between; margin-top: 30px; }
-        .btn { padding: 10px 20px; border: none; cursor: pointer; text-decoration: none; border-radius: 4px; font-weight: bold; }
-        .btn-zpet { background: #28a745; color: white; }
+        .total { font-size: 1.6rem; font-weight: bold; text-align: right; margin-top: 30px; padding-top: 10px; color: #2c3e50; }
+        .tlacitka-akce { display: flex; justify-content: space-between; margin-top: 30px; gap: 15px; }
+        .btn { padding: 14px 24px; border: none; cursor: pointer; text-decoration: none; border-radius: 8px; font-weight: bold; transition: 0.3s; font-size: 0.95rem; text-align: center; flex: 1; }
+        .btn-zpet { background: #6c757d; color: white; flex: none; width: fit-content; margin: 0 auto; }
         .btn-smazat { background: #dc3545; color: white; }
         .btn-objednat { background: #28a745; color: white; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
         .prazdny-kosik { text-align: center; padding: 40px; color: #666; }
 
-        /* --- NOVÝ STYL PRO BUBLINU --- */
-        #bublina {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 8px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1000;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        #bublina.show {
-            visibility: visible;
-            animation: fadein 0.5s, fadeout 0.5s 4.5s;
-        }
-
-        @keyframes fadein {
-            from { bottom: 0; opacity: 0; }
-            to { bottom: 30px; opacity: 1; }
-        }
-
-        @keyframes fadeout {
-            from { bottom: 30px; opacity: 1; }
-            to { bottom: 0; opacity: 0; }
-        }
+        /* Bublina - notifikace */
+        #bublina { position: fixed; bottom: 30px; right: 30px; background: #2c3e50; color: #fff; padding: 16px 24px; border-radius: 8px; display: none; z-index: 1001; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: opacity 0.3s; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo"><h1>E-ShopLogo</h1></div>
-        <nav>
-            <a href="main.html">Domů</a>
-            <a href="produkty.html">Produkty</a>
-            <a href="O_nas.html">O nás</a>
-            <a href="kosik.html" id="kosik-odkaz">Košík 🛒(0)</a>
-        </nav>
+        <div class="container">
+            <div class="logo"><h1>Počítače z Moravy</h1></div>
+            <nav>
+                <a href="index.html">Domů</a>
+                <a href="produkty.html">Produkty</a>
+                <a href="O_nas.html">O nás</a>
+                <a href="kosik.html" id="kosik-odkaz">Košík 🛒 (0)</a>
+            </nav>
+        </div>
     </header>
 
-    <div class="container">
-        <h2>Váš nákupní košík</h2>
-        <div id="seznam-polozek"></div>
+    <main class="container">
+        <div class="cart-wrapper">
+            <h2>Váš nákupní košík</h2>
+            <div id="seznam-polozek">
+                <p style="text-align:center;">Načítám košík...</p>
+            </div>
 
-        <div id="patka-kosiku" style="display: none;">
-            <div class="total" id="celkova-cena">Celkem: 0 Kč</div>
-            <div class="tlacitka-akce">
-                <button class="btn btn-smazat" onclick="vyprazdnitKosik()">Vysypat košík</button>
-                <a href="rekapitulace_udeja.html" class="btn btn-objednat">Pokračovat v objednávce</a>
+            <div id="patka-kosiku" style="display: none;">
+                <div class="total" id="celkova-cena">Celkem: 0 Kč</div>
+                <div class="tlacitka-akce">
+                    <button class="btn btn-smazat" onclick="vyprazdnitKosik()">Smazat vše</button>
+                    <a href="rekapitulace_udeja.html" class="btn btn-objednat">Pokračovat k objednávce</a>
+                </div>
+            </div>
+            
+            <div style="display: flex; justify-content: center; margin-top: 30px;">
+                <a href="index.html" class="btn btn-zpet">← Zpět k produktům</a>
             </div>
         </div>
-        
-        <div class="tlacitka-akce" style="margin-top: 20px;">
-            <a href="produkty.html" class="btn btn-zpet">← Zpět k produktům</a>
-        </div>
-    </div>
+    </main>
 
-    <div id="bublina">Košík byl úspěšně vyprázdněn! 🗑️</div>
+    <div id="bublina"></div>
 
     <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB0AsPToca13UPI9BzR_5nj5scqZwnhOxo",
+            authDomain: "pc-store-5656d.firebaseapp.com",
+            databaseURL: "https://pc-store-5656d-default-rtdb.europe-west1.firebasedatabase.app/",
+            projectId: "pc-store-5656d",
+            storageBucket: "pc-store-5656d.firebasestorage.app",
+            messagingSenderId: "329194547414",
+            appId: "1:329194547414:web:14cf1cffd85a0279d54177"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let casovacBubliny;
+
+        function zobrazBublinu(text) {
+            const bublina = document.getElementById('bublina');
+            bublina.innerText = text;
+            bublina.style.display = 'block';
+            bublina.style.opacity = '1';
+            clearTimeout(casovacBubliny);
+            casovacBubliny = setTimeout(() => {
+                bublina.style.opacity = '0';
+                setTimeout(() => { bublina.style.display = 'none'; }, 300);
+            }, 3000);
+        }
+
         function zobrazKosik() {
             const seznam = document.getElementById('seznam-polozek');
             const celkemElement = document.getElementById('celkova-cena');
@@ -98,55 +111,90 @@
             const kosikOdkaz = document.getElementById('kosik-odkaz');
             
             let kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];
-            kosikOdkaz.innerText = 'Košík 🛒(' + kosik.length + ')';
-            seznam.innerHTML = '';
-            let celkovaSuma = 0;
-
+            if(kosikOdkaz) kosikOdkaz.innerText = 'Košík 🛒 (' + kosik.length + ')';
+            
             if (kosik.length === 0) {
-                seznam.innerHTML = '<div class="prazdny-kosik"><h3>Váš košík zeje prázdnotou.</h3><p>Vyberte si něco z naší nabídky!</p></div>';
+                seznam.innerHTML = '<div class="prazdny-kosik"><h3>Váš košík je prázdný.</h3><p>Vyberte si některý z našich herních strojů!</p></div>';
                 patka.style.display = 'none';
-            } else {
+                return;
+            }
+
+            db.ref('/').once('value').then((snapshot) => {
+                const data = snapshot.val() || {};
+                const aktualniCeny = data.ceny || {};
+                
+                seznam.innerHTML = '';
+                let celkovaSuma = 0;
                 patka.style.display = 'block';
+
                 kosik.forEach((polozka, index) => {
-                    celkovaSuma += polozka.cena;
+                    const cenaProVypocet = (aktualniCeny[polozka.dbKey] !== undefined) ? aktualniCeny[polozka.dbKey] : polozka.cena;
+                    celkovaSuma += cenaProVypocet;
+                    
+                    const cestaKObrazku = `img/${polozka.dbKey}.jpg`;
+                    
                     seznam.innerHTML += `
                         <div class="polozka">
-                            <div><strong>${polozka.nazev}</strong></div>
-                            <div>
-                                <span class="cena-polozky">${polozka.cena} Kč</span>
-                                <button onclick="odebratPolozku(${index})" style="margin-left:15px; background:none; border:none; color:red; cursor:pointer;">✖</button>
+                            <img src="${cestaKObrazku}" alt="${polozka.nazev}" onerror="this.src='https://via.placeholder.com/80?text=PC'">
+                            <div class="polozka-info">
+                                <strong>${polozka.nazev}</strong>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 20px;">
+                                <span class="cena-polozky">${cenaProVypocet.toLocaleString('cs-CZ')} Kč</span>
+                                <button onclick="odebratPolozku(${index}, '${polozka.nazev}')" style="background:none; border:none; color:#dc3545; cursor:pointer; font-size:1.5rem; padding: 0 5px;">&times;</button>
                             </div>
                         </div>
                     `;
                 });
-                celkemElement.innerText = `Celkem: ${celkovaSuma} Kč`;
-            }
+                celkemElement.innerText = `Celkem: ${celkovaSuma.toLocaleString('cs-CZ')} Kč`;
+            }).catch(error => {
+                console.error("Firebase error:", error);
+                vykresliZLocalStorage(kosik);
+            });
         }
 
-        function odebratPolozku(index) {
+        function vykresliZLocalStorage(kosik) {
+            const seznam = document.getElementById('seznam-polozek');
+            const celkemElement = document.getElementById('celkova-cena');
+            const patka = document.getElementById('patka-kosiku');
+            
+            seznam.innerHTML = '';
+            let celkovaSuma = 0;
+            patka.style.display = 'block';
+
+            kosik.forEach((polozka, index) => {
+                celkovaSuma += polozka.cena;
+                const cestaKObrazku = `img/${polozka.dbKey}.jpg`;
+                seznam.innerHTML += `
+                    <div class="polozka">
+                        <img src="${cestaKObrazku}" alt="${polozka.nazev}" onerror="this.src='https://via.placeholder.com/80?text=PC'">
+                        <div class="polozka-info"><strong>${polozka.nazev}</strong></div>
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <span class="cena-polozky">${polozka.cena.toLocaleString('cs-CZ')} Kč</span>
+                            <button onclick="odebratPolozku(${index}, '${polozka.nazev}')" style="background:none; border:none; color:#dc3545; cursor:pointer; font-size:1.5rem;">&times;</button>
+                        </div>
+                    </div>
+                `;
+            });
+            celkemElement.innerText = `Celkem: ${celkovaSuma.toLocaleString('cs-CZ')} Kč`;
+        }
+
+        function odebratPolozku(index, nazev) {
             let kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];
             kosik.splice(index, 1);
             localStorage.setItem('mujKosik', JSON.stringify(kosik));
             zobrazKosik();
+            zobrazBublinu(`🗑️ ${nazev} byl odebrán`);
         }
 
-        // UPRAVENÁ FUNKCE BEZ CONFIRM OKNA
         function vyprazdnitKosik() {
-            // Smazání dat
+            // Žádný alert ani confirm, rovnou vymazat a ukázat bublinu
             localStorage.removeItem('mujKosik');
             zobrazKosik();
-
-            // Zobrazení bubliny
-            const bublina = document.getElementById("bublina");
-            bublina.className = "show";
-
-            // Schování bubliny po 5 sekundách (5000 ms)
-            setTimeout(function(){ 
-                bublina.className = bublina.className.replace("show", ""); 
-            }, 5000);
+            zobrazBublinu("🗑️ Košík byl vyprázdněn");
         }
 
-        zobrazKosik();
+        window.onload = zobrazKosik;
     </script>
 </body>
 </html>
