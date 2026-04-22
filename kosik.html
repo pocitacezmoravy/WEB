@@ -25,11 +25,11 @@
             padding: 0 20px; 
         }
         
-        /* --- HLAVIČKA --- */
+        /* --- HLAVIČKA A NAVIGACE --- */
         header { 
             background: #2c3e50; 
             color: #fff; 
-            padding: 0.5rem 0; 
+            padding: 1rem 0; 
             position: sticky; 
             top: 0; 
             z-index: 1000; 
@@ -39,6 +39,7 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
+            position: relative;
         }
 
         .logo a {
@@ -46,31 +47,56 @@
             align-items: center;
             text-decoration: none;
             color: #fff;
+            transition: transform 0.2s ease;
         }
+        .logo a:hover { transform: scale(1.02); }
 
         .logo img {
             height: 100px; 
             width: auto;
             margin-right: 15px;
+            border-radius: 5px;
         }
 
         .logo h1 { 
             margin: 0; 
-            font-size: 1.4rem; 
+            font-size: 1.5rem; 
             font-weight: 700;
+            letter-spacing: 1px;
         }
 
+        nav { display: flex; align-items: center; }
         nav a { 
             color: #fff; 
-            margin-left: 25px; 
+            margin-left: 20px; 
             text-decoration: none; 
             font-weight: 500; 
-            font-size: 1rem;
+            transition: color 0.3s; 
         }
-        nav a.active { color: #28a745; border-bottom: 2px solid #28a745; }
+        nav a:hover { color: #28a745; }
+        nav a.active { color: #28a745; }
 
-        .menu-toggle { display: none; flex-direction: column; cursor: pointer; gap: 5px; }
-        .menu-toggle span { display: block; width: 25px; height: 3px; background: white; border-radius: 2px; }
+        /* Mobilní menu tlačítko (Hamburger) */
+        .menu-toggle { 
+            display: none; 
+            flex-direction: column; 
+            cursor: pointer; 
+            gap: 5px; 
+            padding: 5px;
+        }
+        .menu-toggle span { 
+            display: block; 
+            width: 25px; 
+            height: 3px; 
+            background: white; 
+            border-radius: 2px; 
+            transition: 0.3s;
+        }
+
+        /* Animace křížku */
+        .menu-toggle.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .menu-toggle.active span:nth-child(2) { opacity: 0; }
+        .menu-toggle.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
         /* --- OBSAH KOŠÍKU --- */
         .cart-wrapper { 
@@ -95,7 +121,7 @@
 
         .total { font-size: 1.8rem; font-weight: 800; text-align: right; margin-top: 30px; color: #2c3e50; border-top: 2px solid #f0f2f5; padding-top: 20px; }
         
-        /* --- TLAČÍTKA (KLÍČOVÁ ZMĚNA) --- */
+        /* --- TLAČÍTKA --- */
         .tlacitka-akce { 
             display: flex; 
             flex-wrap: wrap; 
@@ -117,34 +143,73 @@
             box-sizing: border-box;
         }
 
-        /* Smazat a Objednat - stejně široká */
-        .btn-smazat, .btn-objednat {
-            flex: 1; 
-            min-width: 140px;
-        }
-
+        .btn-smazat, .btn-objednat { flex: 1; min-width: 140px; }
         .btn-smazat { background: #fff; color: #dc3545; border: 1px solid #dc3545; }
         .btn-smazat:hover { background: #dc3545; color: #fff; }
-        
         .btn-objednat { background: #28a745; color: white; }
         .btn-objednat:hover { background: #218838; }
-
-        /* Upravit košík - pod nimi na celou šířku */
-        .btn-zpet { 
-            flex-basis: 100%; 
-            background: #e9ecef; 
-            color: #495057; 
-            margin-top: 5px;
-        }
+        .btn-zpet { flex-basis: 100%; background: #e9ecef; color: #495057; margin-top: 5px; }
         .btn-zpet:hover { background: #dee2e6; }
 
-        #bublina { position: fixed; bottom: 30px; right: 30px; background: #2c3e50; color: #fff; padding: 15px 25px; border-radius: 50px; display: none; z-index: 2000; }
+        #bublina { 
+            position: fixed; 
+            bottom: 30px; 
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2c3e50; 
+            color: #fff; 
+            padding: 15px 25px; 
+            border-radius: 50px; 
+            display: none; 
+            z-index: 2000; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
 
-        @media (max-width: 600px) {
-            .btn-smazat, .btn-objednat { flex-basis: 100%; } /* Na mobilu pod sebou */
-            .logo img { height: 50px; }
+        /* --- RESPONSIVITA (Identická s ostatními stránkami) --- */
+        @media (max-width: 768px) {
+            .logo img { height: 60px; }
+            .logo h1 { font-size: 1.1rem; }
             .menu-toggle { display: flex; }
-            nav { display: none; }
+            
+            nav { 
+                display: flex;
+                flex-direction: column; 
+                position: absolute; 
+                top: 100%; 
+                left: 0;
+                width: 100%; 
+                background: #2c3e50; 
+                padding: 10px 0;
+                box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+                
+                /* Skrytí nahoru */
+                transform: translateY(-150%); 
+                opacity: 0;
+                visibility: hidden;
+                transition: transform 0.4s ease, opacity 0.3s ease;
+                z-index: -1;
+            }
+
+            nav.active { 
+                transform: translateY(0); 
+                opacity: 1;
+                visibility: visible;
+            }
+
+            nav a { 
+                margin: 0; 
+                padding: 15px 20px; 
+                width: 100%; 
+                font-size: 1.1rem;
+                border-bottom: 1px solid rgba(255,255,255,0.05); 
+                text-align: center;
+                box-sizing: border-box;
+                display: block;
+            }
+            nav a:last-child { border-bottom: none; }
+
+            .cart-wrapper { padding: 20px; margin: 20px auto; }
+            .btn-smazat, .btn-objednat { flex-basis: 100%; }
         }
     </style>
 </head>
@@ -158,7 +223,9 @@
                     <h1>Počítače z Moravy</h1>
                 </a>
             </div>
-            <div class="menu-toggle" id="mobile-toggle"><span></span><span></span><span></span></div>
+            <div class="menu-toggle" id="mobile-menu">
+                <span></span><span></span><span></span>
+            </div>
             <nav id="nav-menu">
                 <a href="index.html">Domů</a>
                 <a href="produkty.html">Produkty</a>
@@ -189,6 +256,7 @@
     <div id="bublina"></div>
 
     <script>
+        // --- FIREBASE KONFIGURACE ---
         const firebaseConfig = {
             apiKey: "AIzaSyB0AsPToca13UPI9BzR_5nj5scqZwnhOxo",
             authDomain: "pc-store-5656d.firebaseapp.com",
@@ -201,14 +269,28 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        document.getElementById('mobile-toggle').addEventListener('click', () => {
-            document.getElementById('nav-menu').classList.toggle('active');
+        // --- MOBILNÍ MENU ---
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navMenu = document.getElementById('nav-menu');
+        
+        mobileMenu.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            navMenu.classList.toggle('active');
         });
 
+        document.querySelectorAll('#nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // --- FUNKCE KOŠÍKU ---
         function zobrazBublinu(text) {
             const bublina = document.getElementById('bublina');
             bublina.innerText = text;
             bublina.style.display = 'block';
+            bublina.style.opacity = '1';
             setTimeout(() => { bublina.style.display = 'none'; }, 3000);
         }
 
@@ -219,7 +301,7 @@
             const kosikOdkaz = document.getElementById('kosik-odkaz');
             
             let kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];
-            if(kosikOdkaz) kosikOdkaz.innerText = 'Košík 🛒 (' + kosik.length + ')';
+            if(kosikOdkaz) kosikOdkaz.innerHTML = `Košík 🛒 <b>(${kosik.length})</b>`;
             
             if (kosik.length === 0) {
                 seznam.innerHTML = '<div style="text-align:center; padding: 40px; color: #666;"><h3>Košík je prázdný</h3></div>';
