@@ -310,10 +310,24 @@
                 return;
             }
 
-            const orderItemsHtml = kosik.map(p => `
-                <div style="margin-bottom:10px; border-bottom:1px solid #eee;">
-                    <b>${p.nazev}</b> - ${p.cena.toLocaleString('cs-CZ')} Kč
-                </div>`).join("");
+            // --- OPRAVA PRO OBRÁZKY V EMAILU ---
+            // ZDE NAHRAĎTE "vasi_domeny.cz" SKUTEČNOU ADRESOU VAŠEHO WEBU
+            const baseUrl = "https://vasi_domeny.cz/"; 
+
+            const orderItemsHtml = kosik.map(p => {
+                const imgId = p.dbKey.replace('_', '');
+                const imgSrc = `${baseUrl}img/${imgId}.jpg`;
+                
+                return `
+                <div style="margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; font-family: sans-serif;">
+                    <img src="${imgSrc}" width="80" height="60" style="object-fit: contain; margin-right: 15px; border-radius: 4px; border: 1px solid #ddd;" alt="${p.nazev}">
+                    <div>
+                        <b style="font-size: 14px;">${p.nazev}</b><br>
+                        <span style="color: #28a745; font-weight: bold; font-size: 16px;">${p.cena.toLocaleString('cs-CZ')} Kč</span>
+                    </div>
+                </div>`;
+            }).join("");
+            // ------------------------------------
 
             const params = {
                 user_name: document.getElementById('jmeno').value,
@@ -333,6 +347,7 @@
             localStorage.removeItem('mujKosik');
             document.getElementById('success-overlay').style.display = 'flex';
         } catch (err) {
+            console.error(err);
             alert("Chyba při odesílání. Zkuste to prosím znovu.");
             odeslatBtn.disabled = false;
             odeslatBtn.innerText = "Odeslat objednávku";
