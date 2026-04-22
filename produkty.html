@@ -26,7 +26,7 @@
             padding: 0 20px; 
         }
 
-        /* Hlavička a Navigace - Vizuál z prvního kódu */
+        /* Hlavička a Navigace */
         header { 
             background: #2c3e50; 
             color: #fff; 
@@ -40,6 +40,7 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
+            position: relative; /* Důležité pro pozicování menu shora */
         }
         
         .logo a { 
@@ -63,7 +64,7 @@
         }
         nav a:hover { color: #28a745; }
 
-        /* Mobilní menu tlačítko - Funkční animace ze druhého kódu */
+        /* Mobilní menu tlačítko */
         .menu-toggle { 
             display: none; 
             flex-direction: column; 
@@ -83,17 +84,6 @@
         .menu-toggle.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
         .menu-toggle.active span:nth-child(2) { opacity: 0; }
         .menu-toggle.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-
-        /* Hero sekce - Vizuál z prvního kódu */
-        .hero { 
-            background: #fff; 
-            padding: 50px 0; 
-            text-align: center; 
-            border-bottom: 3px solid #28a745; 
-            margin-bottom: 40px; 
-        }
-        .hero h2 { margin-top: 0; font-size: 2.2rem; }
-        .hero p { font-size: 1.1rem; color: #666; }
 
         /* Produkty Grid a Karty */
         .product-grid { 
@@ -141,11 +131,9 @@
         }
         .btn-primary { background: #28a745; color: white; }
         .btn-primary:hover { background: #218838; }
-        .btn-primary:active { transform: scale(0.98); }
         .btn-secondary { background: #e9ecef; color: #2c3e50; border: 1px solid #dee2e6; }
-        .btn-secondary:hover { background: #dee2e6; }
 
-        /* Notifikační bublina - Vycentrovaná ze druhého kódu */
+        /* Notifikační bublina */
         #bublina { 
             position: fixed; 
             bottom: 30px; 
@@ -162,37 +150,47 @@
             white-space: nowrap;
         }
 
-        /* --- RESPONSIVITA --- */
+        /* --- RESPONSIVITA (Menu vysouvací shora) --- */
         @media (max-width: 768px) {
-            .logo img { height: 50px; }
+            .logo img { height: 60px; }
             .logo h1 { font-size: 1.1rem; }
             .menu-toggle { display: flex; }
             
             nav { 
                 display: flex;
                 flex-direction: column; 
-                position: fixed; 
-                top: 0; 
-                right: -100%; 
-                width: 80%; 
-                height: 100vh;
+                position: absolute; 
+                top: 100%; /* Hned pod headerem */
+                left: 0;
+                width: 100%; 
                 background: #2c3e50; 
-                padding: 80px 0 0 0; 
-                transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+                padding: 10px 0;
+                box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+                
+                /* Skrytí shora */
+                transform: translateY(-150%); 
+                opacity: 0;
+                visibility: hidden;
+                transition: transform 0.4s ease, opacity 0.3s ease;
+                z-index: -1; /* Aby bylo pod horní lištou při pohybu */
             }
-            nav.active { right: 0; }
+
+            nav.active { 
+                transform: translateY(0); 
+                opacity: 1;
+                visibility: visible;
+            }
+
             nav a { 
                 margin: 0; 
-                padding: 20px; 
+                padding: 15px 20px; 
                 width: 100%; 
-                font-size: 1.2rem;
+                font-size: 1.1rem;
                 border-bottom: 1px solid rgba(255,255,255,0.05); 
                 text-align: center;
+                box-sizing: border-box;
             }
             
-            .hero { padding: 30px 15px; }
-            .hero h2 { font-size: 1.6rem; }
             .product-grid { padding: 0 10px; }
         }
     </style>
@@ -218,8 +216,6 @@
         </nav>
     </div>
 </header>
-
-
 
 <div class="container">
     <div class="product-grid">
@@ -270,7 +266,7 @@
         navMenu.classList.toggle('active'); 
     });
 
-    // Firebase
+    // Firebase (Ponecháno tvé původní nastavení)
     const firebaseConfig = {
         apiKey: "AIzaSyB0AsPToca13UPI9BzR_5nj5scqZwnhOxo",
         authDomain: "pc-store-5656d.firebaseapp.com",
@@ -325,6 +321,7 @@
         aktualizovatPocitadlo();
         zobrazBublinu(nazev);
         
+        // Po přidání do košíku menu zavřeme
         navMenu.classList.remove('active');
         mobileMenu.classList.remove('active');
     }
