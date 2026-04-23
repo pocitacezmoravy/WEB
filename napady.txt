@@ -1,7 +1,7 @@
-přidat do emailu údaje o zákazníkovi
+přidat do emailu údaje o zákazníkovi jak pro nákup tak formulář
 
 prohlížeč na fotky:
 zobrazení posuvníku fotek
-udělat překlikávací menu pro popis, parametry, benchmark
 
-proč se mi liší počet řádku u PC1/2 a PC3
+předělat zobrazení paramterů PC a celkovou stránku
+udělat překlikávací menu pro popis, parametry, benchmark u daných kompů
