@@ -23,14 +23,18 @@
             padding: 0 20px; 
         }
 
-        /* --- HEADER & NAVIGACE --- */
+        /* --- HEADER & NAVIGACE - FULL WIDTH --- */
         header { 
             background: #2c3e50; color: #fff; padding: 1rem 0; 
             position: sticky; top: 0; z-index: 1000; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
         }
-        header .container { 
-            display: flex; justify-content: space-between; align-items: center; 
+
+        .header-full-width {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0 40px; 
             position: relative;
         }
         
@@ -55,7 +59,6 @@
             border-radius: 2px; transition: 0.3s;
         }
 
-        /* Animace křížku */
         .menu-toggle.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
         .menu-toggle.active span:nth-child(2) { opacity: 0; }
         .menu-toggle.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
@@ -107,7 +110,6 @@
             text-transform: uppercase; letter-spacing: 1px;
         }
         .btn-nakup:hover { background: #218838; transform: translateY(-2px); }
-        .btn-nakup:active { transform: scale(0.98); }
         .btn-nakup:disabled { background: #ccc; cursor: not-allowed; transform: none; }
         
         /* --- BUBLINA --- */
@@ -118,8 +120,9 @@
             white-space: nowrap; transition: opacity 0.3s;
         }
 
-        /* --- RESPONSIVITA (Vysouvání shora) --- */
+        /* --- RESPONSIVITA --- */
         @media (max-width: 850px) {
+            .header-full-width { padding: 0 20px; }
             .detail-karta { grid-template-columns: 1fr; padding: 20px; }
             .logo img { height: 60px; }
             .logo h1 { font-size: 1.1rem; }
@@ -135,8 +138,6 @@
                 background: #2c3e50; 
                 padding: 10px 0;
                 box-shadow: 0 10px 15px rgba(0,0,0,0.2);
-                
-                /* Skrytí menu nahoru */
                 transform: translateY(-150%); 
                 opacity: 0;
                 visibility: hidden;
@@ -160,14 +161,13 @@
                 box-sizing: border-box;
                 display: block;
             }
-            nav a:last-child { border-bottom: none; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="container">
+    <div class="header-full-width">
         <div class="logo">
             <a href="index.html">
                 <img src="img/logo.jpg" alt="Logo">
@@ -267,7 +267,7 @@
             const btnEl = document.getElementById('btn-koupit');
 
             if (pc.sklad > 0) {
-                skladEl.innerText = `● Skladem: ${pc.sklad} ks`;
+                skladEl.innerText = `Skladem: ${pc.sklad} ks`;
                 skladEl.style.color = "#28a745";
                 btnEl.disabled = false;
                 btnEl.innerText = "Do košíku 🛒";
