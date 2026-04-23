@@ -4,35 +4,4 @@ prohlížeč na fotky:
 zobrazení posuvníku fotek
 udělat překlikávací menu pro popis, parametry, benchmark
 
-
-
-
-
-
-
-Mezi ,,Produkty“  a  ,,O nás“
-
-Přidat další kategorii ,, Servis“
-
-Tam vložit Text:
-
-
-Nevíte si rady s Vaším počítačem? Nevadí! My ano!
-
-Ať už je váš počítač pomalý, přehřívá se, nejde zapnout, má málo místa nebo jen potřebuje vyčistit, 
-jsme tu pro Vás a zařídíme, aby Váš počítač znovu běžel jako nový.
-
-Nabízíme i upgrade  počítače, kde Vám nabídneme rozumné řešení pro Váše zařízení a to jak výkonově tak i vzhledově.
-Taktéž nabízíme postavení počítače na míru přesně podle vašich požadavků a představ.
-
-Po domluvě je možnost opravy i notebooku ale primárně jsme zaměřní na stolní počítačové sestavy.
-
-
-
-Pozn.
-
-Kolonka se zasláním Dotazníku kde zákazník napíše o co se přesně jedná, email, tel. Nějaký kontakt
-
-udělat druhé odesílání emailu na dotazník/formulář a email by šel oboum jak mě tak zákazníkovi 
-
 proč se mi liší počet řádku u PC1/2 a PC3
