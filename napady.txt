@@ -11,6 +11,8 @@ to stejné u menu k pravému rohu
 
 prohlížeč na fotky:
 zobrazení posuvníku fotek
+udělat překlikávací menu pro popis, parametry, benchmark
+
 
 
 
@@ -41,3 +43,5 @@ Pozn.
 Kolonka se zasláním Dotazníku kde zákazník napíše o co se přesně jedná, email, tel. Nějaký kontakt
 
 udělat druhé odesílání emailu na dotazník/formulář a email by šel oboum jak mě tak zákazníkovi 
+
+proč se mi liší počet řádku u PC1/2 a PC3

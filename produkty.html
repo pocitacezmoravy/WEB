@@ -36,11 +36,13 @@
             z-index: 1000; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
         }
-        header .container { 
+
+        .header-full-width {
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            position: relative; /* Důležité pro pozicování menu shora */
+            padding: 0 40px; 
+            position: relative;
         }
         
         .logo a { 
@@ -64,7 +66,6 @@
         }
         nav a:hover { color: #28a745; }
 
-        /* Mobilní menu tlačítko */
         .menu-toggle { 
             display: none; 
             flex-direction: column; 
@@ -85,14 +86,15 @@
         .menu-toggle.active span:nth-child(2) { opacity: 0; }
         .menu-toggle.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
-        /* Produkty Grid a Karty */
+        /* Produkty Grid a Karty - ZVĚTŠENO ODSAZENÍ (margin-top) */
         .product-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
             gap: 30px; 
             margin-bottom: 60px;
-            margin-top: 40px; 
+            margin-top: 80px; /* Zde jsem změnil 40px na 80px */
         }
+
         .product-card { 
             background: white; 
             padding: 25px; 
@@ -113,7 +115,6 @@
         .sklad-info { font-size: 0.85rem; margin-bottom: 5px; font-weight: bold; }
         .cena-text { font-size: 1.4rem; color: #2c3e50; margin: 10px 0; }
 
-        /* Tlačítka */
         .btn { 
             padding: 14px 20px; 
             border: none; 
@@ -133,7 +134,6 @@
         .btn-primary:hover { background: #218838; }
         .btn-secondary { background: #e9ecef; color: #2c3e50; border: 1px solid #dee2e6; }
 
-        /* Notifikační bublina */
         #bublina { 
             position: fixed; 
             bottom: 30px; 
@@ -150,8 +150,8 @@
             white-space: nowrap;
         }
 
-        /* --- RESPONSIVITA (Menu vysouvací shora) --- */
         @media (max-width: 768px) {
+            .header-full-width { padding: 0 20px; }
             .logo img { height: 60px; }
             .logo h1 { font-size: 1.1rem; }
             .menu-toggle { display: flex; }
@@ -160,19 +160,17 @@
                 display: flex;
                 flex-direction: column; 
                 position: absolute; 
-                top: 100%; /* Hned pod headerem */
+                top: 100%; 
                 left: 0;
                 width: 100%; 
                 background: #2c3e50; 
                 padding: 10px 0;
                 box-shadow: 0 10px 15px rgba(0,0,0,0.2);
-                
-                /* Skrytí shora */
                 transform: translateY(-150%); 
                 opacity: 0;
                 visibility: hidden;
                 transition: transform 0.4s ease, opacity 0.3s ease;
-                z-index: -1; /* Aby bylo pod horní lištou při pohybu */
+                z-index: -1;
             }
 
             nav.active { 
@@ -191,14 +189,17 @@
                 box-sizing: border-box;
             }
             
-            .product-grid { padding: 0 10px; }
+            .product-grid { 
+                padding: 0 10px; 
+                margin-top: 40px; /* Na mobilech může zůstat menší */
+            }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="container">
+    <div class="header-full-width">
         <div class="logo">
             <a href="index.html">
                 <img src="img/logo.jpg" alt="Logo">
@@ -257,7 +258,6 @@
 <div id="bublina"></div>
 
 <script>
-    // Mobilní menu
     const mobileMenu = document.getElementById('mobile-menu');
     const navMenu = document.getElementById('nav-menu');
     
@@ -266,7 +266,6 @@
         navMenu.classList.toggle('active'); 
     });
 
-    // Firebase (Ponecháno tvé původní nastavení)
     const firebaseConfig = {
         apiKey: "AIzaSyB0AsPToca13UPI9BzR_5nj5scqZwnhOxo",
         authDomain: "pc-store-5656d.firebaseapp.com",
@@ -321,7 +320,6 @@
         aktualizovatPocitadlo();
         zobrazBublinu(nazev);
         
-        // Po přidání do košíku menu zavřeme
         navMenu.classList.remove('active');
         mobileMenu.classList.remove('active');
     }
