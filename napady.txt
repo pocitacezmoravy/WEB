@@ -9,6 +9,8 @@ ve všech kartách:
 předělat umístění loga aby bylo vždy v rohu podle obrazovky
 to stejné u menu k pravému rohu
 
+prohlížeč na fotky:
+zobrazení posuvníku fotek
 
 
 
