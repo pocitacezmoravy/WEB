@@ -1,5 +1,17 @@
 přidat do emailu údaje o zákazníkovi
 
+Domů:
+přidat řádek na domoskou obrazovku hned nad produkty s textem : Nově naskladněné
+lehce posunout nabídku pc dolů na domovské obrazovce
+
+
+ve všech kartách:
+předělat umístění loga aby bylo vždy v rohu podle obrazovky
+to stejné u menu k pravému rohu
+
+
+
+
 
 
 
@@ -12,10 +24,13 @@ Tam vložit Text:
 
 Nevíte si rady s Vaším počítačem? Nevadí! My ano!
 
-Ať už je váš počítač pomalý, přehřívá se, nejde zapnout, má málo místo nebo jen potřebuje vyčistit, jsme tu pro Vás a zařídíme, aby Váš PC znovu běžel jako nový.
+Ať už je váš počítač pomalý, přehřívá se, nejde zapnout, má málo místa nebo jen potřebuje vyčistit, 
+jsme tu pro Vás a zařídíme, aby Váš počítač znovu běžel jako nový.
 
-Nabízíme i upgrade  PC, kde Vám nabídneme rozumné řešení pro Váš počítač a to jak výkonově tak i vzhledově.
-Taktéž nabízíme postavení počítače na míru přesně podle vašich představ.
+Nabízíme i upgrade  počítače, kde Vám nabídneme rozumné řešení pro Váše zařízení a to jak výkonově tak i vzhledově.
+Taktéž nabízíme postavení počítače na míru přesně podle vašich požadavků a představ.
+
+Po domluvě je možnost opravy i notebooku ale primárně jsme zaměřní na stolní počítačové sestavy.
 
 
 
@@ -23,9 +38,4 @@ Pozn.
 
 Kolonka se zasláním Dotazníku kde zákazník napíše o co se přesně jedná, email, tel. Nějaký kontakt
 
-
-
--Tohle buď nějakam dát nebo ne? (názor)
-Opravujeme primárně stolní PC ale zvládneme i notebooky. 
-
-
+udělat druhé odesílání emailu na dotazník/formulář a email by šel oboum jak mě tak zákazníkovi 
