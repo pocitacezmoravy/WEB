@@ -170,7 +170,7 @@
     const pscInput = document.getElementById('psc');
     const kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];
 
-    // Pomocná funkce pro získání cesty k obrázku na základě dbKey
+    // Pomocná funkce pro získání cesty k obrázku
     function getProductImgPath(dbKey) {
         const idCiste = dbKey.replace('_', '').toLowerCase();
         return `img/${idCiste}/${idCiste}.jpg`;
@@ -207,7 +207,6 @@
             if (!info || !info.nazev) return;
 
             celkem += p.cena;
-            // Použití nové cesty k obrázku
             const cestaImg = getProductImgPath(p.dbKey);
 
             seznamDiv.innerHTML += `
@@ -241,14 +240,21 @@
                 return;
             }
 
-            // Generování HTML pro e-mail s novou cestou k obrázku
-            // POZNÁMKA: V e-mailu se lokální cesty (img/...) nezobrazí, pokud nemáte absolutní URL (např. https://vase-domena.cz/img/...)
+            // --- GENEROVÁNÍ HTML PRO E-MAIL ---
+            // Nutno použít absolutní URL, aby se obrázky v e-mailu zobrazily
+            const baseWebUrl = "https://pocitacezmoravy.github.io/WEB/"; 
+
             const orderItemsHtml = kosik.map(p => {
                 const cestaImg = getProductImgPath(p.dbKey);
                 return `
-                <div style="display:flex; align-items:center; border-bottom:1px solid #eee; padding:10px 0;">
-                    <img src="https://vasedomena.cz/${cestaImg}" width="80" style="margin-right:15px; border-radius:4px;">
-                    <div><b>${p.nazev}</b><br><span style="color:#28a745;">${p.cena.toLocaleString()} Kč</span></div>
+                <div style="display:table; width:100%; border-bottom:1px solid #eee; padding:10px 0;">
+                    <div style="display:table-cell; width:80px; vertical-align:middle;">
+                        <img src="${baseWebUrl}${cestaImg}" width="80" style="border-radius:4px; display:block;">
+                    </div>
+                    <div style="display:table-cell; padding-left:15px; vertical-align:middle;">
+                        <div style="font-weight:bold; font-size:14px; color:#333;">${p.nazev}</div>
+                        <div style="color:#28a745; font-weight:bold; font-size:14px;">${p.cena.toLocaleString('cs-CZ')} Kč</div>
+                    </div>
                 </div>`;
             }).join("");
 
