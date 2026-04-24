@@ -53,7 +53,7 @@
             transition: transform 0.2s ease; 
         }
         .logo a:hover { transform: scale(1.02); }
-        .logo img { height: 100px; width: auto; margin-right: 15px; display: block; border-radius: 5px; }
+        .logo img { height: 100px; width: auto; margin-right: 15px; display: block; border-radius: 5px; object-fit: contain; }
         .logo h1 { margin: 0; font-size: 1.5rem; letter-spacing: 1px; font-weight: 700; }
         
         nav { display: flex; align-items: center; }
@@ -254,6 +254,7 @@
 <div id="bublina"></div>
 
 <script>
+    // Mobilní menu logika
     const mobileMenu = document.getElementById('mobile-menu');
     const navMenu = document.getElementById('nav-menu');
     
@@ -262,6 +263,7 @@
         navMenu.classList.toggle('active'); 
     });
 
+    // Firebase konfigurace
     const firebaseConfig = {
         apiKey: "AIzaSyB0AsPToca13UPI9BzR_5nj5scqZwnhOxo",
         authDomain: "pc-store-5656d.firebaseapp.com",
@@ -276,15 +278,21 @@
     const db = firebase.database();
     const produktyKlice = ['pc_1', 'pc_2', 'pc_3'];
     
+    // Hlavní real-time listener pro Firebase
     db.ref('produkty').on('value', (snapshot) => {
         const data = snapshot.val() || {};
         
-        // Načtení loga z DB
+        // 1. DYNAMICKÉ NAČTENÍ LOGA
         if(data.logo) {
             const logoImg = document.getElementById('web-logo');
             if(logoImg) logoImg.src = data.logo;
+            
+            // Aktualizace favicony (ikony v liště prohlížeče)
+            const favicon = document.querySelector("link[rel='icon']");
+            if(favicon) favicon.href = data.logo;
         }
 
+        // 2. NAČTENÍ PRODUKTŮ
         produktyKlice.forEach(klic => {
             const pc = data[klic];
             if (!pc) return;
@@ -295,11 +303,9 @@
             const btnEl = document.getElementById('btn-' + klic);
             const imgEl = document.getElementById('img-' + klic);
             
-            // Načtení textů
             if(nazevEl) nazevEl.innerText = pc.nazev;
             if(cenaEl) cenaEl.innerText = pc.cena.toLocaleString('cs-CZ');
             
-            // NAČTENÍ OBRÁZKU Z FIREBASE (klíč foto_1)
             if(imgEl && pc.foto_1) {
                 imgEl.src = pc.foto_1;
             }
@@ -317,13 +323,13 @@
                 } else {
                     btnEl.disabled = false;
                     btnEl.innerText = "Do košíku";
-                    // Do košíku posíláme foto_1
                     btnEl.onclick = () => pridatDoKosiku(pc.nazev, pc.cena, pc.foto_1, klic);
                 }
             }
         });
     });
 
+    // Funkce košíku
     function pridatDoKosiku(nazev, cenaCislo, urlObrazku, dbKey) {
         let kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];
         kosik.push({ nazev: nazev, cena: cenaCislo, obrazek: urlObrazku, dbKey: dbKey });
