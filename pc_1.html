@@ -14,7 +14,8 @@
         /* --- ZÁKLADNÍ STYLY & PLYNULÝ SCROLL --- */
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 150px;
+            /* Odsazení při scrollování, aby menu nezakrývalo nadpisy */
+            scroll-padding-top: 170px;
         }
 
         body {
@@ -29,7 +30,7 @@
             padding: 0 20px;
         }
 
-        /* --- HEADER & NAVIGACE (ROZBALOVÁNÍ SHORA) --- */
+        /* --- HEADER & NAVIGACE --- */
         header {
             background: #2c3e50; color: #fff; padding: 1rem 0;
             position: sticky; top: 0; z-index: 1100;
@@ -80,16 +81,17 @@
             margin-bottom: 30px;
         }
 
-        /* Foto sekce s galerii a šipkami */
         .foto-sekce { display: flex; flex-direction: column; gap: 15px; }
         
         .hlavni-foto-wrap { 
             width: 100%; height: 350px; display: flex; align-items: center; justify-content: center; 
             overflow: hidden; border-radius: 12px; background: #fff; position: relative; 
         }
-        .hlavni-foto-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; transition: 0.3s; }
+        .hlavni-foto-wrap img { 
+            max-width: 100%; max-height: 100%; object-fit: contain; 
+            transition: 0.3s; cursor: zoom-in; 
+        }
         
-        /* Styl pro šipky */
         .gallery-arrow {
             position: absolute; top: 50%; transform: translateY(-50%);
             background: rgba(255, 255, 255, 0.7); color: #333;
@@ -99,7 +101,6 @@
             opacity: 0; transition: 0.3s; z-index: 10;
         }
         .hlavni-foto-wrap:hover .gallery-arrow { opacity: 1; }
-        .gallery-arrow:hover { background: rgba(255, 255, 255, 0.9); }
         .arrow-prev { left: 10px; }
         .arrow-next { right: 10px; }
 
@@ -112,10 +113,34 @@
         .miniatura:hover { opacity: 1; border-color: #ddd; }
         .miniatura.active { opacity: 1; border-color: #28a745; }
 
-        h1.product-title { color: #2c3e50; margin: 0; font-size: 2rem; line-height: 1.2; }
-        .kratky-popis { color: #666; font-size: 1.05rem; margin: 15px 0 25px 0; font-style: italic; line-height: 1.5; }
+        /* --- MODÁLNÍ OKNO (LIGHTBOX) --- */
+        #image-modal {
+            display: none; position: fixed; z-index: 9999; left: 0; top: 0; 
+            width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); 
+            align-items: center; justify-content: center;
+        }
+        #modal-img {
+            max-width: 85%; max-height: 85%; border-radius: 5px; 
+            box-shadow: 0 0 25px rgba(255,255,255,0.2); transition: 0.3s;
+        }
+        .modal-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1); color: white;
+            border: 1px solid rgba(255,255,255,0.3); width: 60px; height: 60px; 
+            border-radius: 50%; font-size: 30px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s; user-select: none; z-index: 10002;
+        }
+        .modal-arrow:hover { background: rgba(255, 255, 255, 0.3); }
+        .modal-prev { left: 30px; }
+        .modal-next { right: 30px; }
 
-        /* --- STICKY PRODUKTOVÉ MENU --- */
+        .close-modal {
+            position: absolute; top: 20px; right: 35px; color: #fff; 
+            font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10001;
+        }
+
+        /* --- SEKCE & MENU --- */
         .product-nav {
             background: white; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd;
             position: sticky; top: 112px; z-index: 999;
@@ -126,48 +151,50 @@
             color: #555; font-size: 14px; font-weight: 600;
             border-bottom: 3px solid transparent; transition: 0.3s;
         }
-        .nav-tabs li a.active { border-bottom-color: #0055a6; color: #0055a6; background: rgba(0, 85, 166, 0.05); }
+        /* Styl pro aktivní odkaz při scrollování a kliknutí */
+        .nav-tabs li a.active { 
+            border-bottom-color: #28a745; 
+            color: #28a745; 
+            background: rgba(40, 167, 69, 0.05); 
+        }
 
-        /* --- SEKCE POD MENU --- */
         .section-container { background: white; padding: 50px 30px; margin-bottom: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-        .section-container h2 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; }
-
         .parametry-tabulka { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .parametry-tabulka td { padding: 12px 5px; border-bottom: 1px solid #f8f9fa; font-size: 0.95rem; }
+        .parametry-tabulka td { padding: 12px 5px; border-bottom: 1px solid #f8f9fa; }
         .parametry-tabulka td:first-child { font-weight: 600; color: #7f8c8d; width: 40%; }
 
         .cena-sekce { margin-top: 10px; padding: 25px; background: #fafbfc; border-radius: 12px; text-align: center; border: 1px solid #f0f2f5; }
         .velka-cena { font-size: 2.2rem; font-weight: 800; color: #2c3e50; display: block; margin-bottom: 15px; }
-        .sklad-info { display: block; margin-bottom: 12px; font-weight: 700; font-size: 0.9rem; }
         .btn-nakup { display: block; background: #28a745; color: white; padding: 18px; border-radius: 10px; font-weight: bold; border: none; cursor: pointer; width: 100%; font-size: 1.1rem; transition: 0.3s; text-transform: uppercase; }
 
         .benchmarks-grid { display: flex; gap: 20px; overflow-x: auto; padding: 10px 0; }
         .game-card { text-align: center; border: 1px solid #eee; padding: 15px; border-radius: 10px; min-width: 130px; background: #fff; }
         .fps-badge { background: #00b8e6; color: white; padding: 5px 12px; border-radius: 20px; font-weight: bold; }
 
-        #bublina { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #2c3e50; color: #fff; padding: 16px 24px; border-radius: 50px; display: none; z-index: 2000; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+        #bublina { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #2c3e50; color: #fff; padding: 16px 24px; border-radius: 50px; display: none; z-index: 2000; }
 
         @media (max-width: 850px) {
-            .header-full-width { padding: 0 20px; }
-            .detail-karta { grid-template-columns: 1fr; padding: 20px; }
-            .logo img { height: 60px; }
-            .logo h1 { font-size: 1.1rem; }
+            .detail-karta { grid-template-columns: 1fr; }
             .menu-toggle { display: flex; }
-            .product-nav { top: 80px; }
-
             nav {
-                display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: #2c3e50; padding: 10px 0; box-shadow: 0 10px 15px rgba(0,0,0,0.2);
-                transform: translateY(-150%); opacity: 0; visibility: hidden; transition: transform 0.4s ease-in-out, opacity 0.3s ease; z-index: -1;
+                display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: #2c3e50; padding: 10px 0;
+                transform: translateY(-150%); opacity: 0; visibility: hidden; transition: 0.4s ease-in-out; z-index: -1;
             }
             nav.active { transform: translateY(0); opacity: 1; visibility: visible; }
-            nav a { margin: 0; padding: 15px 20px; width: 100%; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; box-sizing: border-box; display: block; }
-            
-            /* Na mobilu šipky vždy viditelné */
-            .gallery-arrow { opacity: 1; background: rgba(255, 255, 255, 0.8); }
+            nav a { margin: 0; padding: 15px 20px; text-align: center; display: block; }
+            .modal-arrow { width: 45px; height: 45px; font-size: 20px; }
+            .product-nav { top: 80px; } /* Úprava pro mobilní zobrazení */
         }
     </style>
 </head>
 <body>
+
+<div id="image-modal">
+    <span class="close-modal" onclick="zavriModal()">&times;</span>
+    <button class="modal-arrow modal-prev" onclick="prepnoutFotku(-1)">&#10094;</button>
+    <img id="modal-img" src="" alt="Zvětšený náhled">
+    <button class="modal-arrow modal-next" onclick="prepnoutFotku(1)">&#10095;</button>
+</div>
 
 <header>
     <div class="header-full-width">
@@ -198,21 +225,22 @@
             <div class="hlavni-foto-wrap">
                 <button class="gallery-arrow arrow-prev" onclick="prepnoutFotku(-1)">&#10094;</button>
                 <button class="gallery-arrow arrow-next" onclick="prepnoutFotku(1)">&#10095;</button>
-                
-                <img id="hlavni-obrazek" src="img/pc1/pc1.jpg" alt="Kancelářský Profík">
+                <img id="hlavni-obrazek" src="img/pc1/pc1.jpg" alt="Kancelářský Profík" onclick="otevriModal()">
             </div>
             <div class="miniatury-wrap" id="galerie-miniatury">
                 <img src="img/pc1/pc1.jpg" class="miniatura active" onclick="klikNaMiniaturu(0)">
-                <img src="img/pc1/pc1_2.jpg" class="miniatura" onclick="klikNaMiniaturu(1)" onerror="this.style.display='none'">
-                <img src="img/pc1/pc1_3.jpg" class="miniatura" onclick="klikNaMiniaturu(2)" onerror="this.style.display='none'">
-                <img src="https://via.placeholder.com/400x300?text=Detail+zadní+strany" class="miniatura" onclick="klikNaMiniaturu(3)">
+                <img src="img/pc1/pc2.jpg" class="miniatura" onclick="klikNaMiniaturu(1)" onerror="this.style.display='none'">
+                <img src="img/pc1/pc3.jpg" class="miniatura" onclick="klikNaMiniaturu(2)" onerror="this.style.display='none'">
+                <img src="img/pc1/pc4.jpg" class="miniatura" onclick="klikNaMiniaturu(3)" onerror="this.style.display='none'">
+                <img src="img/pc1/pc5.jpg" class="miniatura" onclick="klikNaMiniaturu(4)" onerror="this.style.display='none'">
+                <img src="img/pc1/pc6.jpg" class="miniatura" onclick="klikNaMiniaturu(5)" onerror="this.style.display='none'">
+                <img src="img/pc1/pc7.jpg" class="miniatura" onclick="klikNaMiniaturu(6)" onerror="this.style.display='none'">
             </div>
         </div>
 
         <div class="info-sekce">
             <h1 id="dyn-nazev" class="product-title">Načítání...</h1>
             <p id="dyn-perex" class="kratky-popis">Získávání informací...</p>
-            
             <div class="cena-sekce">
                 <span id="dyn-sklad" class="sklad-info">Načítání...</span>
                 <span class="velka-cena"><span id="dyn-cena">----</span> Kč</span>
@@ -224,7 +252,7 @@
 
 <div class="product-nav">
     <div class="container">
-        <ul class="nav-tabs">
+        <ul class="nav-tabs" id="sticky-nav">
             <li><a href="#popis" class="active">Popis</a></li>
             <li><a href="#parametry">Parametry</a></li>
             <li><a href="#fotky">Fotogalerie</a></li>
@@ -253,8 +281,13 @@
     <div id="fotky" class="section-container">
         <h2>Fotogalerie</h2>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
-            <img src="img/pc1/pc1.jpg" style="width:100%; border-radius:8px;" onclick="zmenFotku(this.src)">
-            <img src="https://via.placeholder.com/400x300?text=Vnitřní+uspořádání" style="width:100%; border-radius:8px;" onclick="zmenFotku(this.src)">
+            <img src="img/pc1/pc2.jpg" style="width:100%; border-radius:8px; cursor:zoom-in;" onclick="otevriModalSpecificka(this.src)">
+            <img src="img/pc1/pc3.jpg" style="width:100%; border-radius:8px; cursor:zoom-in;" onclick="otevriModalSpecificka(this.src)">
+            <img src="img/pc1/pc4.jpg" style="width:100%; border-radius:8px; cursor:zoom-in;" onclick="otevriModalSpecificka(this.src)">
+            <img src="img/pc1/pc5.jpg" style="width:100%; border-radius:8px; cursor:zoom-in;" onclick="otevriModalSpecificka(this.src)">
+            <img src="img/pc1/pc1.jpg" style="width:100%; border-radius:8px; cursor:zoom-in;" onclick="otevriModalSpecificka(this.src)">
+            <img src="img/pc1/pc6.jpg" style="width:100%; border-radius:8px; cursor:zoom-in;" onclick="otevriModalSpecificka(this.src)">
+            <img src="img/pc1/pc7.jpg" style="width:100%; border-radius:8px; cursor:zoom-in;" onclick="otevriModalSpecificka(this.src)">
         </div>
     </div>
 
@@ -271,57 +304,74 @@
 <div id="bublina"></div>
 
 <script>
-    // --- LOGIKA GALERIE SE ŠIPKAMI ---
+    // --- LOGIKA GALERIE A MODALU ---
     let aktualniIndexFotky = 0;
     const miniatury = document.querySelectorAll('#galerie-miniatury .miniatura');
     const hlavniObrazek = document.getElementById('hlavni-obrazek');
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('modal-img');
 
-    // Funkce pro změnu fotky podle URL (pro miniatury a přímé volání)
-    function zmenFotku(url, miniaturaEl) {
-        hlavniObrazek.src = url;
+    function aktualizujZobrazeni() {
+        const vybranaMiniatura = miniatury[aktualniIndexFotky];
+        hlavniObrazek.src = vybranaMiniatura.src;
+        modalImg.src = vybranaMiniatura.src;
         
-        // Zvýraznění aktivní miniatury
-        document.querySelectorAll('.miniatura').forEach(m => m.classList.remove('active'));
-        if (miniaturaEl) {
-            miniaturaEl.classList.add('active');
-            // Aktualizace indexu pro šipky
-            aktualniIndexFotky = Array.from(miniatury).indexOf(miniaturaEl);
-        }
+        miniatury.forEach(m => m.classList.remove('active'));
+        vybranaMiniatura.classList.add('active');
     }
 
-    // Funkce pro kliknutí na miniaturu
     function klikNaMiniaturu(index) {
-        if (index >= 0 && index < miniatury.length) {
-            const miniaturaEl = miniatury[index];
-            // Kontrola, zda miniatura není schovaná (onerror)
-            if (miniaturaEl.style.display !== 'none') {
-                zmenFotku(miniaturaEl.src, miniaturaEl);
-            }
-        }
+        aktualniIndexFotky = index;
+        aktualizujZobrazeni();
     }
 
-    // Funkce pro šipky (-1 pro předchozí, 1 pro další)
     function prepnoutFotku(smer) {
         let novyIndex = aktualniIndexFotky + smer;
-
-        // Nekonečná smyčka
         if (novyIndex >= miniatury.length) novyIndex = 0;
         if (novyIndex < 0) novyIndex = miniatury.length - 1;
 
-        // Kontrola, zda nová miniatura není schovaná, pokud ano, přeskočíme ji
         while (miniatury[novyIndex].style.display === 'none') {
             novyIndex += smer;
             if (novyIndex >= miniatury.length) novyIndex = 0;
             if (novyIndex < 0) novyIndex = miniatury.length - 1;
-            // Bezpečnostní pojistka proti zacyklení, pokud by byly všechny schované
             if (novyIndex === aktualniIndexFotky) break;
         }
-
-        klikNaMiniaturu(novyIndex);
+        aktualniIndexFotky = novyIndex;
+        aktualizujZobrazeni();
     }
 
+    function otevriModal() {
+        modal.style.display = "flex";
+        modalImg.src = hlavniObrazek.src;
+        document.body.style.overflow = "hidden";
+    }
 
-    // Mobilní menu logika
+    function otevriModalSpecificka(src) {
+        const index = Array.from(miniatury).findIndex(m => src.includes(m.getAttribute('src')));
+        if (index !== -1) aktualniIndexFotky = index;
+        
+        modal.style.display = "flex";
+        modalImg.src = src;
+        document.body.style.overflow = "hidden";
+        aktualizujZobrazeni();
+    }
+
+    function zavriModal() {
+        modal.style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+
+    modal.onclick = function(e) { if (e.target === modal) zavriModal(); };
+
+    document.addEventListener('keydown', (e) => {
+        if (modal.style.display === "flex") {
+            if (e.key === "ArrowRight") prepnoutFotku(1);
+            if (e.key === "ArrowLeft") prepnoutFotku(-1);
+            if (e.key === "Escape") zavriModal();
+        }
+    });
+
+    // Mobilní menu
     const mobileMenu = document.getElementById('mobile-menu');
     const navMenu = document.getElementById('nav-menu');
     mobileMenu.addEventListener('click', () => {
@@ -329,7 +379,30 @@
         navMenu.classList.toggle('active');
     });
 
-    // Firebase
+    // --- SCROLLSPY A PLYNULÉ PŘEPÍNÁNÍ MENU ---
+    const sections = document.querySelectorAll(".section-container");
+    const navLinks = document.querySelectorAll(".nav-tabs li a");
+
+    window.addEventListener("scroll", () => {
+        let current = "";
+        sections.forEach((section) => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            // Detekce sekce (s offsetem pro sticky menu)
+            if (window.pageYOffset >= sectionTop - 180) {
+                current = section.getAttribute("id");
+            }
+        });
+
+        navLinks.forEach((a) => {
+            a.classList.remove("active");
+            if (a.getAttribute("href").includes(current)) {
+                a.classList.add("active");
+            }
+        });
+    });
+
+    // --- FIREBASE KONFIGURACE ---
     const firebaseConfig = {
         apiKey: "AIzaSyB0AsPToca13UPI9BzR_5nj5scqZwnhOxo",
         authDomain: "pc-store-5656d.firebaseapp.com",
@@ -341,14 +414,13 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    const PRODUCT_ID = 'pc_1';
 
-    db.ref('produkty/' + PRODUCT_ID).on('value', (snapshot) => {
+    db.ref('produkty/pc_1').on('value', (snapshot) => {
         const pc = snapshot.val();
         if (pc) {
             document.getElementById('dyn-nazev').innerText = pc.nazev;
             document.getElementById('dyn-popis').innerText = pc.popis;
-            document.getElementById('dyn-perex').innerText = pc.perex || "Výkonná sestava připravená pro vaše potřeby.";
+            document.getElementById('dyn-perex').innerText = pc.perex || "Výkonná sestava.";
             document.getElementById('dyn-cpu').innerText = pc.procesor || "--";
             document.getElementById('dyn-gpu').innerText = pc.grafika || "--";
             document.getElementById('dyn-ram').innerText = pc.ram || "--";
@@ -357,58 +429,20 @@
             document.getElementById('dyn-cena').innerText = pc.cena.toLocaleString('cs-CZ');
             
             const skladEl = document.getElementById('dyn-sklad');
-            const btnEl = document.getElementById('btn-koupit');
             if (pc.sklad > 0) {
                 skladEl.innerText = `Skladem: ${pc.sklad} ks`;
                 skladEl.style.color = "#28a745";
-                btnEl.disabled = false;
-                btnEl.onclick = () => pridatDoKosiku(pc.nazev, pc.cena, PRODUCT_ID);
             } else {
                 skladEl.innerText = "Vyprodáno";
                 skladEl.style.color = "#e74c3c";
-                btnEl.disabled = true;
             }
         }
     });
 
-    function pridatDoKosiku(nazev, cena, id) {
+    window.onload = () => {
         let kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];
-        kosik.push({ nazev, cena, obrazek: 'img/pc1.jpg', dbKey: id });
-        localStorage.setItem('mujKosik', JSON.stringify(kosik));
-        aktualizovatPocitadlo();
-        zobrazBublinu(nazev);
-    }
-
-    function aktualizovatPocitadlo() {
-        let kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];
-        const pc = document.getElementById('pocitadlo-kosiku');
-        if (pc) pc.innerHTML = `Košík 🛒 <b>(${kosik.length})</b>`;
-    }
-
-    function zobrazBublinu(nazev) {
-        const b = document.getElementById('bublina');
-        b.innerHTML = '<b>✓ Přidáno:</b> ' + nazev;
-        b.style.display = 'block';
-        setTimeout(() => { b.style.display = 'none'; }, 2500);
-    }
-
-    // Scroll Spy
-    const sections = document.querySelectorAll('.section-container');
-    const navLinks = document.querySelectorAll('.nav-tabs a');
-    window.addEventListener('scroll', () => {
-        let current = "";
-        sections.forEach(section => {
-            if (pageYOffset >= section.offsetTop - 200) {
-                current = section.getAttribute('id');
-            }
-        });
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href').includes(current)) link.classList.add('active');
-        });
-    });
-
-    window.onload = aktualizovatPocitadlo;
+        document.getElementById('pocitadlo-kosiku').innerHTML = `Košík 🛒 <b>(${kosik.length})</b>`;
+    };
 </script>
 </body>
 </html>
