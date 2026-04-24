@@ -33,10 +33,12 @@
             z-index: 1000; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
         }
-        header .container { 
+
+        .header-full-width {
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
+            padding: 0 40px; 
             position: relative;
         }
         
@@ -61,7 +63,13 @@
         }
         nav a:hover { color: #28a745; }
 
-        /* Mobilní menu tlačítko (Hamburger s animací) */
+        /* --- TA MEZERA (Spacer) --- */
+        .header-spacer {
+            height: 50px; /* Stejná mezera jako na stránce servis.html */
+            width: 100%;
+        }
+
+        /* Mobilní menu tlačítko */
         .menu-toggle { 
             display: none; 
             flex-direction: column; 
@@ -78,30 +86,30 @@
             transition: 0.3s;
         }
         
-        /* Transformace na křížek */
         .menu-toggle.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
         .menu-toggle.active span:nth-child(2) { opacity: 0; }
         .menu-toggle.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
         /* Obsah stránky O nás */
-        main { padding: 40px 0; }
+        main { padding-bottom: 60px; }
         .about-section {
             background: #fff;
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border-top: 3px solid #28a745;
-            margin-top: 20px;
+            border-top: 6px solid #28a745; /* Sjednoceno na 6px jako u servisu */
         }
         .about-section h2 { color: #2c3e50; margin-top: 0; font-size: 2.2rem; }
         .about-section h3 { color: #2c3e50; margin-top: 30px; }
         .about-section p { font-size: 1.1rem; color: #444; }
 
-        /* --- RESPONSIVITA (Identická s indexem) --- */
+        /* --- RESPONSIVITA --- */
         @media (max-width: 768px) {
+            .header-full-width { padding: 0 20px; }
             .logo img { height: 60px; }
             .logo h1 { font-size: 1.1rem; }
             .menu-toggle { display: flex; }
+            .header-spacer { height: 30px; } /* Menší mezera na mobilu */
             
             nav { 
                 display: flex;
@@ -113,13 +121,11 @@
                 background: #2c3e50; 
                 padding: 10px 0;
                 box-shadow: 0 10px 15px rgba(0,0,0,0.2);
-                
-                /* Skrytí shora (Princip translateY) */
                 transform: translateY(-150%); 
                 opacity: 0;
                 visibility: hidden;
                 transition: transform 0.4s ease, opacity 0.3s ease;
-                z-index: -1; 
+                z-index: -1;
             }
 
             nav.active { 
@@ -140,7 +146,7 @@
             }
             nav a:last-child { border-bottom: none; }
             
-            .about-section { padding: 25px 20px; margin-top: 10px; }
+            .about-section { padding: 25px 20px; }
             .about-section h2 { font-size: 1.8rem; }
         }
     </style>
@@ -148,7 +154,7 @@
 <body>
 
 <header>
-    <div class="container">
+    <div class="header-full-width">
         <div class="logo">
             <a href="index.html">
                 <img src="img/logo.jpg" alt="Logo">
@@ -161,11 +167,14 @@
         <nav id="nav-menu">
             <a href="index.html">Domů</a>
             <a href="produkty.html">Produkty</a>
-            <a href="O_nas.html">O nás</a>
+            <a href="servis.html">Servis</a>
+            <a href="O_nas.html">O nás</a>            
             <a href="kosik.html" id="pocitadlo-odkaz">Košík 🛒 (0)</a>
         </nav>
     </div>
 </header>
+
+<div class="header-spacer"></div>
 
 <main class="container">
     <section class="about-section">
@@ -180,7 +189,6 @@
 </main>
 
 <script>
-    // Logika menu - stejná jako v produktech
     const mobileMenu = document.getElementById('mobile-menu');
     const navMenu = document.getElementById('nav-menu');
     
@@ -189,7 +197,6 @@
         navMenu.classList.toggle('active'); 
     });
 
-    // Zavření menu po kliknutí na odkaz
     document.querySelectorAll('#nav-menu a').forEach(link => {
         link.addEventListener('click', () => {
             mobileMenu.classList.remove('active');
@@ -197,7 +204,6 @@
         });
     });
 
-    // Počítadlo košíku z localStorage
     function aktualizovatPocitadlo() {
         const kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];
         const kosikLink = document.getElementById('pocitadlo-odkaz');

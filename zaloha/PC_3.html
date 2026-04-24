@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stylový Notebook | Počítače z Moravy</title>
+    <title>Kancelářský Profík | Počítače z Moravy</title>
 
     <link rel="icon" type="image/jpeg" href="img/logo.jpg">
     
@@ -23,14 +23,19 @@
             padding: 0 20px; 
         }
 
-        /* --- HEADER & NAVIGACE --- */
+        /* --- HEADER & NAVIGACE - FULL WIDTH --- */
         header { 
             background: #2c3e50; color: #fff; padding: 1rem 0; 
             position: sticky; top: 0; z-index: 1000; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
         }
-        header .container { 
-            display: flex; justify-content: space-between; align-items: center; 
+
+        .header-full-width {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0 40px; 
+            position: relative;
         }
         
         .logo a { display: flex; align-items: center; text-decoration: none; color: #fff; transition: transform 0.2s; }
@@ -53,6 +58,7 @@
             display: block; width: 25px; height: 3px; background: white; 
             border-radius: 2px; transition: 0.3s;
         }
+
         .menu-toggle.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
         .menu-toggle.active span:nth-child(2) { opacity: 0; }
         .menu-toggle.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
@@ -104,7 +110,6 @@
             text-transform: uppercase; letter-spacing: 1px;
         }
         .btn-nakup:hover { background: #218838; transform: translateY(-2px); }
-        .btn-nakup:active { transform: scale(0.98); }
         .btn-nakup:disabled { background: #ccc; cursor: not-allowed; transform: none; }
         
         /* --- BUBLINA --- */
@@ -117,26 +122,52 @@
 
         /* --- RESPONSIVITA --- */
         @media (max-width: 850px) {
+            .header-full-width { padding: 0 20px; }
             .detail-karta { grid-template-columns: 1fr; padding: 20px; }
-            .logo img { height: 50px; }
+            .logo img { height: 60px; }
             .logo h1 { font-size: 1.1rem; }
             .menu-toggle { display: flex; }
             
             nav { 
-                display: flex; flex-direction: column; position: fixed; 
-                top: 0; right: -100%; width: 80%; height: 100vh;
-                background: #2c3e50; padding: 80px 0 0 0; transition: 0.4s;
-                box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+                display: flex;
+                flex-direction: column; 
+                position: absolute; 
+                top: 100%; 
+                left: 0;
+                width: 100%; 
+                background: #2c3e50; 
+                padding: 10px 0;
+                box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+                transform: translateY(-150%); 
+                opacity: 0;
+                visibility: hidden;
+                transition: transform 0.4s ease-in-out, opacity 0.3s ease;
+                z-index: -1;
             }
-            nav.active { right: 0; }
-            nav a { margin: 0; padding: 20px; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; }
+
+            nav.active { 
+                transform: translateY(0); 
+                opacity: 1;
+                visibility: visible;
+            }
+
+            nav a { 
+                margin: 0; 
+                padding: 15px 20px; 
+                width: 100%; 
+                font-size: 1.1rem;
+                border-bottom: 1px solid rgba(255,255,255,0.05); 
+                text-align: center;
+                box-sizing: border-box;
+                display: block;
+            }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="container">
+    <div class="header-full-width">
         <div class="logo">
             <a href="index.html">
                 <img src="img/logo.jpg" alt="Logo">
@@ -149,7 +180,8 @@
         <nav id="nav-menu">
             <a href="index.html">Domů</a>
             <a href="produkty.html">Produkty</a>
-            <a href="O_nas.html">O nás</a>
+            <a href="servis.html">Servis</a>
+            <a href="o_nas.html">O nás</a>            
             <a href="kosik.html" id="pocitadlo-kosiku">Košík 🛒 (0)</a>
         </nav>
     </div>
@@ -160,7 +192,7 @@
     
     <div class="detail-karta">
         <div class="foto-sekce">
-            <img src="img/PC3.jpg" alt="Stylový Notebook">
+            <img src="img/pc3.jpg" alt="Kancelářský Profík">
         </div>
 
         <div class="info-sekce">
@@ -176,7 +208,7 @@
             </table>
 
             <div class="cena-sekce">
-                <span id="dyn-sklad" class="sklad-info">Načítání skladu...</span>
+                <span id="dyn-sklad" class="sklad-info">Načítání stavu skladu...</span>
                 <span class="velka-cena"><span id="dyn-cena">----</span> Kč</span>
                 <button id="btn-koupit" class="btn-nakup">Do košíku 🛒</button>
             </div>
@@ -187,12 +219,21 @@
 <div id="bublina"></div>
 
 <script>
-    // Mobilní menu toggle
+    // Mobilní menu logika
     const mobileMenu = document.getElementById('mobile-menu');
     const navMenu = document.getElementById('nav-menu');
+    
     mobileMenu.addEventListener('click', () => {
         mobileMenu.classList.toggle('active');
         navMenu.classList.toggle('active');
+    });
+
+    // Zavření menu po kliknutí na odkaz
+    document.querySelectorAll('#nav-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            navMenu.classList.remove('active');
+        });
     });
 
     // FIREBASE CONFIG
@@ -208,7 +249,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const PRODUCT_ID = 'PC_3'; 
+    const PRODUCT_ID = 'pc_3'; 
 
     db.ref('produkty/' + PRODUCT_ID).on('value', (snapshot) => {
         const pc = snapshot.val();
@@ -226,7 +267,7 @@
             const btnEl = document.getElementById('btn-koupit');
 
             if (pc.sklad > 0) {
-                skladEl.innerText = `● Skladem: ${pc.sklad} ks`;
+                skladEl.innerText = `Skladem: ${pc.sklad} ks`;
                 skladEl.style.color = "#28a745";
                 btnEl.disabled = false;
                 btnEl.innerText = "Do košíku 🛒";
@@ -245,7 +286,7 @@
         kosik.push({ 
             nazev: nazev, 
             cena: cena, 
-            obrazek: `img/PC3.jpg`, 
+            obrazek: `img/pc3.jpg`, 
             dbKey: id 
         });
         localStorage.setItem('mujKosik', JSON.stringify(kosik));
@@ -271,6 +312,7 @@
         const pocitadlo = document.getElementById('pocitadlo-kosiku');
         if (pocitadlo) pocitadlo.innerHTML = `Košík 🛒 <b>(${kosik.length})</b>`;
     }
+    
     window.onload = aktualizovatPocitadlo;
 </script>
 </body>
