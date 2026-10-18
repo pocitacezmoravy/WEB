@@ -101,55 +101,13 @@
         .menu-toggle.active span:nth-child(2) { opacity: 0; }
         .menu-toggle.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
-        /* --- LAYOUT S FILTREM A PRODUKTY --- */
-        .shop-layout {
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 30px;
-            margin-top: 40px;
-            margin-bottom: 60px;
-        }
-
-        /* Postranní panel filtrů */
-        .filters-sidebar {
-            background: var(--white);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            border-top: 4px solid var(--accent);
-            height: fit-content;
-        }
-
-        .filters-sidebar h3 {
-            margin-top: 0;
-            font-size: 1.2rem;
-            color: var(--primary);
-            border-bottom: 2px solid #f0f2f5;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        .filter-group {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.95rem;
-            cursor: pointer;
-        }
-
-        .filter-group input[type="checkbox"] {
-            accent-color: var(--accent);
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
         /* Produkty Grid a Karty */
         .product-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
             gap: 30px; 
+            margin-bottom: 60px;
+            margin-top: 40px; 
         }
 
         .product-card { 
@@ -210,13 +168,7 @@
             border: 2px solid var(--accent);
         }
 
-        @media (max-width: 850px) {
-            .shop-layout {
-                grid-template-columns: 1fr;
-            }
-            .filters-sidebar {
-                margin-bottom: 20px;
-            }
+        @media (max-width: 768px) {
             .header-full-width { padding: 0 20px; }
             .logo img { height: 60px; }
             .logo h1 { font-size: 1.1rem; }
@@ -254,6 +206,11 @@
                 text-align: center;
                 box-sizing: border-box;
             }
+            
+            .product-grid { 
+                padding: 0 10px; 
+                margin-top: 40px; 
+            }
         }
     </style>
 </head>
@@ -272,7 +229,8 @@
         </div>
         <nav id="nav-menu">
             <a href="index.html">Domů</a>
-            <a href="produkty.html" class="active">Produkty</a>
+            <a href="produkty.html">PC sestavy</a>
+            <a href="komponenty.html">Komponenty</a>
             <a href="servis.html">Servis</a>
             <a href="o_nas.html">O nás</a>
             <a href="kosik.html" id="pocitadlo-odkaz">Košík 🛒 (0)</a>
@@ -281,65 +239,39 @@
 </header>
 
 <div class="container">
-    <div class="shop-layout">
-        <!-- LEVÝ PANEL - FILTRY -->
-        <aside class="filters-sidebar">
-            <h3>Filtrovat komponenty</h3>
-            <label class="filter-group">
-                <input type="checkbox" class="filter-chk" value="procesor"> Procesor
-            </label>
-            <label class="filter-group">
-                <input type="checkbox" class="filter-chk" value="ram"> RAM
-            </label>
-            <label class="filter-group">
-                <input type="checkbox" class="filter-chk" value="zakladni_deska"> Základní deska
-            </label>
-            <label class="filter-group">
-                <input type="checkbox" class="filter-chk" value="disk"> Disky
-            </label>
-            <label class="filter-group">
-                <input type="checkbox" class="filter-chk" value="case"> CASE
-            </label>
-            <label class="filter-group">
-                <input type="checkbox" class="filter-chk" value="gpu"> GPU
-            </label>
-        </aside>
+    <div class="product-grid" id="product-grid-container">
+        <article class="product-card" id="card-pc_1">
+            <a href="pc_1.html" class="product-link">
+                <img src="img/pc1.jpg" alt="PC 1">
+                <h3 id="nazev-pc_1">Načítání...</h3>
+            </a>
+            <p class="sklad-info" id="sklad-pc_1">Načítání...</p>
+            <p class="cena-text"><strong id="cena-pc_1">----</strong> <strong>Kč</strong></p>
+            <a href="pc_1.html" class="btn btn-secondary">Specifikace</a>
+            <button class="btn btn-primary" id="btn-pc_1">Do košíku</button>
+        </article>
 
-        <!-- PRAVÁ ČÁST - VÝPIS PRODUKTŮ -->
-        <div class="product-grid" id="product-grid-container">
-            <article class="product-card" id="card-pc_1" data-id="pc_1">
-                <a href="pc_1.html" class="product-link">
-                    <img src="img/pc1.jpg" alt="PC 1">
-                    <h3 id="nazev-pc_1">Načítání...</h3>
-                </a>
-                <p class="sklad-info" id="sklad-pc_1">Načítání...</p>
-                <p class="cena-text"><strong id="cena-pc_1">----</strong> <strong>Kč</strong></p>
-                <a href="pc_1.html" class="btn btn-secondary">Specifikace</a>
-                <button class="btn btn-primary" id="btn-pc_1">Do košíku</button>
-            </article>
+        <article class="product-card" id="card-pc_2">
+            <a href="pc_2.html" class="product-link">
+                <img src="img/pc2.jpg" alt="PC 2">
+                <h3 id="nazev-pc_2">Načítání...</h3>
+            </a>
+            <p class="sklad-info" id="sklad-pc_2">Načítání...</p>
+            <p class="cena-text"><strong id="cena-pc_2">----</strong> <strong>Kč</strong></p>
+            <a href="pc_2.html" class="btn btn-secondary">Specifikace</a>
+            <button class="btn btn-primary" id="btn-pc_2">Do košíku</button>
+        </article>
 
-            <article class="product-card" id="card-pc_2" data-id="pc_2">
-                <a href="pc_2.html" class="product-link">
-                    <img src="img/pc2.jpg" alt="PC 2">
-                    <h3 id="nazev-pc_2">Načítání...</h3>
-                </a>
-                <p class="sklad-info" id="sklad-pc_2">Načítání...</p>
-                <p class="cena-text"><strong id="cena-pc_2">----</strong> <strong>Kč</strong></p>
-                <a href="pc_2.html" class="btn btn-secondary">Specifikace</a>
-                <button class="btn btn-primary" id="btn-pc_2">Do košíku</button>
-            </article>
-
-            <article class="product-card" id="card-pc_3" data-id="pc_3">
-                <a href="pc_3.html" class="product-link">
-                    <img src="img/pc3.jpg" alt="PC 3">
-                    <h3 id="nazev-pc_3">Načítání...</h3>
-                </a>
-                <p class="sklad-info" id="sklad-pc_3">Načítání...</p>
-                <p class="cena-text"><strong id="cena-pc_3">----</strong> <strong>Kč</strong></p>
-                <a href="pc_3.html" class="btn btn-secondary">Specifikace</a>
-                <button class="btn btn-primary" id="btn-pc_3">Do košíku</button>
-            </article>
-        </div>
+        <article class="product-card" id="card-pc_3">
+            <a href="pc_3.html" class="product-link">
+                <img src="img/pc3.jpg" alt="PC 3">
+                <h3 id="nazev-pc_3">Načítání...</h3>
+            </a>
+            <p class="sklad-info" id="sklad-pc_3">Načítání...</p>
+            <p class="cena-text"><strong id="cena-pc_3">----</strong> <strong>Kč</strong></p>
+            <a href="pc_3.html" class="btn btn-secondary">Specifikace</a>
+            <button class="btn btn-primary" id="btn-pc_3">Do košíku</button>
+        </article>
     </div>
 </div>
 
@@ -367,51 +299,12 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const produktyKlice = ['pc_1', 'pc_2', 'pc_3'];
-    let globalProductsData = {};
-
+    
     db.ref('produkty').on('value', (snapshot) => {
-        globalProductsData = snapshot.val() || {};
-        vykresliA FiltrujProdukty();
-    });
-
-    // Reakce na změnu zaškrtnutí filtrů
-    document.querySelectorAll('.filter-chk').forEach(chk => {
-        chk.addEventListener('change', vykresliA FiltrujProdukty);
-    });
-
-    function vykresliA FiltrujProdukty() {
-        const aktivniFiltry = Array.from(document.querySelectorAll('.filter-chk:checked')).map(el => el.value);
-
+        const data = snapshot.val() || {};
         produktyKlice.forEach(klic => {
-            const pc = globalProductsData[klic];
-            const cardEl = document.getElementById('card-' + klic);
-            if (!cardEl) return;
-
-            if (!pc) {
-                cardEl.style.display = 'none';
-                return;
-            }
-
-            // Logika filtrování (pokud jsou vybrány filtry, produkt musí obsahovat data pro dané parametry)
-            let zobrazit = true;
-            if (aktivniFiltry.length > 0) {
-                zobrazit = aktivniFiltry.every(filtr => {
-                    if (filtr === 'procesor') return pc.procesor && pc.procesor.trim() !== "";
-                    if (filtr === 'ram') return pc.ram && pc.ram.trim() !== "";
-                    if (filtr === 'zakladni_deska') return (pc.zakladni_deska || pc.deska) && (pc.zakladni_deska || pc.deska).trim() !== "";
-                    if (filtr === 'disk') return pc.disk && pc.disk.trim() !== "";
-                    if (filtr === 'case') return (pc.case || pc.skrin) && (pc.case || pc.skrin).trim() !== "";
-                    if (filtr === 'gpu') return (pc.gpu || pc.grafika) && (pc.gpu || pc.grafika).trim() !== "";
-                    return true;
-                });
-            }
-
-            if (!zobrazit) {
-                cardEl.style.display = 'none';
-                return;
-            } else {
-                cardEl.style.display = 'flex';
-            }
+            const pc = data[klic];
+            if (!pc) return;
 
             const nazevEl = document.getElementById('nazev-' + klic);
             const infoEl = document.getElementById('sklad-' + klic);
@@ -438,7 +331,7 @@
                 }
             }
         });
-    }
+    });
 
     function pridatDoKosiku(nazev, cenaCislo, urlObrazku, dbKey) {
         let kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];

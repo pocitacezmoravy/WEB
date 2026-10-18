@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komponenty | Počítače z Moravy</title>
+    
+    <!-- Ikonka v záložce -->
+    <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/pocitacezmoravy/WEB/main/img/loga/logo.jpg">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    
+    <style>
+        /* --- BRANDOVÁ PALETA (Sladěno s logem) --- */
+        :root {
+            --primary: #1a1d20;        /* Tmavý antracit (pozadí hlavičky) */
+            --accent: #f4b41a;         /* Zlatavě žlutá z loga (detaily, okraje) */
+            --accent-hover: #e09f0e;   
+            --btn-green: #5ca800;      /* Akční zelená pro tlačítka */
+            --btn-green-hover: #4a8800;
+            --bg-light: #f4f6f8;       /* Světlé pozadí stránky */
+            --text-dark: #212529;      /* Tmavý text */
+            --text-muted: #64748b;    
+            --white: #ffffff;
+            --price-red: #d32f2f;      /* Červená cena */
+            --border-color: #e2e8f0;
+        }
+
+        /* --- ZÁKLADNÍ STYLING --- */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.6; 
+            background-color: var(--bg-light); 
+            color: var(--text-dark); 
+        }
+
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 20px; 
+        }
+
+        /* --- STICKY HLAVIČKA (Sjednocená navigace) --- */
+        header { 
+            background-color: var(--primary); 
+            color: var(--white); 
+            padding: 1rem 0; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15); 
+            border-bottom: 3px solid var(--accent);
+        }
+
+        .header-full-width {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0 40px; 
+            position: relative;
+        }
+        
+        .logo a { 
+            display: flex; 
+            align-items: center; 
+            text-decoration: none; 
+            color: var(--white); 
+            transition: transform 0.2s ease; 
+        }
+        .logo a:hover { transform: scale(1.02); }
+        .logo img { height: 80px; width: auto; margin-right: 15px; display: block; border-radius: 6px; border: 2px solid var(--accent); }
+        .logo h1 { margin: 0; font-size: 1.5rem; letter-spacing: 1px; font-weight: 700; }
+        
+        nav { display: flex; align-items: center; }
+        nav a { 
+            color: var(--white); 
+            margin-left: 20px; 
+            text-decoration: none; 
+            font-weight: 500; 
+            transition: color 0.3s; 
+        }
+        nav a:hover { color: var(--accent); }
+        nav a.active { color: var(--accent); font-weight: 700; }
+
+        .menu-toggle { 
+            display: none; 
+            flex-direction: column; 
+            cursor: pointer; 
+            gap: 5px; 
+            padding: 5px;
+        }
+        .menu-toggle span { 
+            display: block; 
+            width: 25px; 
+            height: 3px; 
+            background: var(--white); 
+            border-radius: 2px; 
+            transition: 0.3s;
+        }
+        
+        .menu-toggle.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .menu-toggle.active span:nth-child(2) { opacity: 0; }
+        .menu-toggle.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+        /* --- HERO SEKCE --- */
+        .hero {
+            background-color: var(--white);
+            padding: 30px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            text-align: center;
+        }
+
+        .hero h2 {
+            margin: 0;
+            font-size: 2rem;
+            color: var(--text-dark);
+        }
+
+        .hero p {
+            margin: 10px 0 0;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* --- HLAVNÍ LAYOUT (Filtry | Produkty) --- */
+        .shop-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 30px;
+            align-items: start;
+            margin-bottom: 60px;
+        }
+
+        /* --- POSTRANNÍ PANEL S FILTRY --- */
+        .filters-sidebar {
+            background-color: var(--white);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--accent);
+            position: sticky;
+            top: 100px;
+        }
+
+        .filters-sidebar h3 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: var(--primary);
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .filter-group input[type="checkbox"] {
+            accent-color: var(--accent);
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .btn-filter-reset {
+            background: none;
+            border: 1px solid #cbd5e1;
+            color: var(--text-muted);
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-filter-reset:hover {
+            background-color: #f8fafc;
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* --- GRID S KOMPONENTY --- */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 25px;
+        }
+
+        .status-msg {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px;
+            background: var(--white);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        /* --- KARTA KOMPONENTU --- */
+        .component-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--accent);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .component-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+        }
+
+        .comp-type-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(244, 180, 26, 0.15);
+            color: #b47d05;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .component-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: contain;
+            margin: 15px 0;
+        }
+
+        .component-card h4 {
+            margin: 0 0 10px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            height: 40px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            color: var(--text-dark);
+        }
+
+        .card-footer {
+            margin-top: auto;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .comp-price {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--price-red);
+        }
+
+        .btn-add {
+            background-color: var(--btn-green);
+            color: var(--white);
+            border: none;
+            padding: 10px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            transition: background-color 0.2s;
+        }
+        .btn-add:hover {
+            background-color: var(--btn-green-hover);
+        }
+
+        /* --- PLOVOUCÍ BUBLINA --- */
+        #bublina { 
+            position: fixed; 
+            bottom: 30px; 
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary); 
+            color: var(--white); 
+            padding: 16px 24px; 
+            border-radius: 50px; 
+            display: none; 
+            z-index: 2000; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3); 
+            transition: opacity 0.3s; 
+            white-space: nowrap;
+            border: 2px solid var(--accent);
+        }
+
+        /* --- RESPONSIVITA --- */
+        @media (max-width: 850px) {
+            .header-full-width { padding: 0 20px; }
+            .logo img { height: 60px; }
+            .logo h1 { font-size: 1.1rem; }
+            .menu-toggle { display: flex; }
+            
+            nav { 
+                display: flex;
+                flex-direction: column; 
+                position: absolute; 
+                top: 100%; 
+                left: 0;
+                width: 100%; 
+                background: var(--primary); 
+                padding: 10px 0;
+                box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+                transform: translateY(-150%); 
+                opacity: 0;
+                visibility: hidden;
+                transition: transform 0.4s ease, opacity 0.3s ease;
+                z-index: -1;
+            }
+
+            nav.active { 
+                transform: translateY(0); 
+                opacity: 1;
+                visibility: visible;
+            }
+
+            nav a { 
+                margin: 0; 
+                padding: 15px 20px; 
+                width: 100%; 
+                font-size: 1.1rem;
+                border-bottom: 1px solid rgba(255,255,255,0.05); 
+                text-align: center;
+                box-sizing: border-box;
+                display: block;
+            }
+
+            .shop-layout {
+                grid-template-columns: 1fr;
+            }
+            .filters-sidebar {
+                position: static;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-full-width">
+        <div class="logo">
+            <a href="index.html">
+                <img src="https://raw.githubusercontent.com/pocitacezmoravy/WEB/main/img/loga/logo.jpg" alt="Logo">
+                <h1>Počítače z Moravy</h1>
+            </a>
+        </div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span><span></span><span></span>
+        </div>
+        <nav id="nav-menu">
+            <a href="index.html">Domů</a>
+            <a href="produkty.html">Produkty</a>
+            <a href="komponenty.html" class="active">Komponenty</a>
+            <a href="servis.html">Servis</a>
+            <a href="o_nas.html">O nás</a>
+            <a href="kosik.html" id="pocitadlo-odkaz">Košík 🛒 (0)</a>
+        </nav>
+    </div>
+</header>
+
+<div class="hero">
+    <div class="container">
+        <h2>Seznam komponentů</h2>
+        <p>Vyberte si samostatné díly pro váš počítač.</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="shop-layout">
+        
+        <!-- LEVÝ PANEL - FILTRY PODLE TYPU KOMPONENTU -->
+        <aside class="filters-sidebar">
+            <h3>Filtrovat typ</h3>
+            <label class="filter-group">
+                <input type="checkbox" class="filter-chk" value="procesor"> Procesor
+            </label>
+            <label class="filter-group">
+                <input type="checkbox" class="filter-chk" value="ram"> RAM
+            </label>
+            <label class="filter-group">
+                <input type="checkbox" class="filter-chk" value="zakladni_deska"> Základní deska
+            </label>
+            <label class="filter-group">
+                <input type="checkbox" class="filter-chk" value="gpu"> GPU (Grafická karta)
+            </label>
+            <label class="filter-group">
+                <input type="checkbox" class="filter-chk" value="disk"> Disky (Úložiště)
+            </label>
+            <label class="filter-group">
+                <input type="checkbox" class="filter-chk" value="zdroj"> Zdroj
+            </label>
+            <label class="filter-group">
+                <input type="checkbox" class="filter-chk" value="ventilatory"> Ventilátory / Chlazení
+            </label>
+            <label class="filter-group">
+                <input type="checkbox" class="filter-chk" value="case"> CASE (Skříň)
+            </label>
+            
+            <button class="btn-filter-reset" id="btn-reset">Zrušit filtry</button>
+        </aside>
+
+        <!-- PRAVÝ PANEL - VÝPIS KOMPONENTŮ -->
+        <section class="component-grid" id="component-holder">
+            <div class="status-msg" id="loading-msg">Načítám komponenty z databáze...</div>
+        </section>
+    </div>
+</div>
+
+<div id="bublina"></div>
+
+<script>
+    // Mobilní menu
+    const mobileMenu = document.getElementById('mobile-menu');
+    const navMenu = document.getElementById('nav-menu');
+    
+    mobileMenu.addEventListener('click', () => { 
+        mobileMenu.classList.toggle('active');
+        navMenu.classList.toggle('active'); 
+    });
+
+    document.querySelectorAll('#nav-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            navMenu.classList.remove('active');
+        });
+    });
+
+    // Firebase konfigurace
+    const firebaseConfig = {
+        apiKey: "AIzaSyB0AsPToca13UPI9BzR_5nj5scqZwnhOxo",
+        authDomain: "pc-store-5656d.firebaseapp.com",
+        databaseURL: "https://pc-store-5656d-default-rtdb.europe-west1.firebasedatabase.app/",
+        projectId: "pc-store-5656d",
+        storageBucket: "pc-store-5656d.firebasestorage.app",
+        messagingSenderId: "329194547414",
+        appId: "1:329194547414:web:14cf1cffd85a0279d54177"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    
+    let allComponents = [];
+    const componentHolder = document.getElementById('component-holder');
+    const loadingMsg = document.getElementById('loading-msg');
+    const btnReset = document.getElementById('btn-reset');
+
+    // Načtení dat z Firebase (očekává uzel 'komponenty')
+    db.ref('komponenty').on('value', (snapshot) => {
+        const data = snapshot.val();
+        allComponents = [];
+        
+        if (data) {
+            for (let id in data) {
+                allComponents.push({ id, ...data[id] });
+            }
+            loadingMsg.style.display = 'none';
+            applyFilters();
+        } else {
+            componentHolder.innerHTML = '<div class="status-msg">V databázi momentálně nejsou žádné komponenty.</div>';
+        }
+    });
+
+    // Reakce na změnu filtrů
+    document.querySelectorAll('.filter-chk').forEach(chk => {
+        chk.addEventListener('change', applyFilters);
+    });
+
+    btnReset.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chk').forEach(cb => cb.checked = false);
+        applyFilters();
+    });
+
+    function applyFilters() {
+        const aktivniFiltry = Array.from(document.querySelectorAll('.filter-chk:checked')).map(el => el.value);
+
+        const filtered = allComponents.filter(comp => {
+            if (aktivniFiltry.length === 0) return true;
+            // Porovnání typu komponenty z databáze s vybraným filtrem (case-insensitive)
+            const compType = (comp.typ || "").toLowerCase().trim();
+            return aktivniFiltry.some(f => compType.includes(f));
+        });
+
+        renderComponents(filtered);
+    }
+
+    function renderComponents(components) {
+        // Vyčistit staré karty kromě načítací zprávy
+        const cards = componentHolder.querySelectorAll('.component-card, .status-msg:not(#loading-msg)');
+        cards.forEach(c => c.remove());
+
+        if (components.length === 0) {
+            componentHolder.innerHTML += '<div class="status-msg">Zadaným filtrům neodpovídá žádný komponent.</div>';
+            return;
+        }
+
+        components.forEach(comp => {
+            const card = document.createElement('article');
+            card.className = 'component-card';
+            
+            const imgUrl = comp.img || 'img/pc1.jpg';
+            
+            card.innerHTML = `
+                <span class="comp-type-badge">${comp.typ || 'Komponent'}</span>
+                <img src="${imgUrl}" alt="${comp.nazev}" onerror="this.src='img/pc1.jpg'">
+                <h4>${comp.nazev}</h4>
+                <div class="card-footer">
+                    <span class="comp-price">${comp.cena.toLocaleString('cs-CZ')} Kč</span>
+                    <button class="btn-add" id="btn-${comp.id}">Do košíku</button>
+                </div>
+            `;
+            
+            componentHolder.appendChild(card);
+
+            // Nastavení akce pro tlačítko nákupu
+            const btn = document.getElementById(`btn-${comp.id}`);
+            if (comp.sklad <= 0) {
+                btn.disabled = true;
+                btn.innerText = "Vyprodáno";
+                btn.style.background = "#cbd5e1";
+            } else {
+                btn.onclick = () => pridatDoKosiku(comp.nazev, comp.cena, imgUrl, comp.id);
+            }
+        });
+    }
+
+    function pridatDoKosiku(nazev, cenaCislo, urlObrazku, dbKey) {
+        let kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];
+        kosik.push({ nazev: nazev, cena: cenaCislo, obrazek: urlObrazku, dbKey: dbKey });
+        localStorage.setItem('mujKosik', JSON.stringify(kosik));
+        aktualizovatPocitadlo();
+        zobrazBublinu(nazev);
+        
+        navMenu.classList.remove('active');
+        mobileMenu.classList.remove('active');
+    }
+
+    let casovacBubliny;
+    function zobrazBublinu(nazev) {
+        const b = document.getElementById('bublina');
+        b.innerHTML = '<b>✓ Přidáno:</b> ' + nazev;
+        b.style.display = 'block'; 
+        b.style.opacity = '1';
+        clearTimeout(casovacBubliny);
+        casovacBubliny = setTimeout(() => {
+            b.style.opacity = '0';
+            setTimeout(() => { b.style.display = 'none'; }, 300);
+        }, 2500);
+    }
+
+    function aktualizovatPocitadlo() {
+        let kosik = JSON.parse(localStorage.getItem('mujKosik')) || [];
+        const kosikLink = document.getElementById('pocitadlo-odkaz');
+        if (kosikLink) kosikLink.innerHTML = `Košík 🛒 <b>(${kosik.length})</b>`;
+    }
+
+    window.onload = aktualizovatPocitadlo;
+</script>
+</body>
+</html>
