@@ -24,7 +24,12 @@
             --price-red: #d32f2f;      /* Červená cena */
         }
 
-        /* Sjednocené základní styly */
+        /* Sjednocené základní styly a fix proti bílé mezeře dole */
+        html {
+            height: 100%;
+            background: var(--primary);
+        }
+
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             margin: 0; 
@@ -32,11 +37,18 @@
             line-height: 1.6; 
             background: var(--bg-light); 
             color: var(--text-dark); 
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
         }
+
         .container { 
             max-width: 1200px; 
             margin: 0 auto; 
             padding: 0 20px; 
+            flex: 1; /* Roztáhne obsah, aby zápatí bylo vždy u doplňkového spodku */
+            width: 100%;
+            box-sizing: border-box;
         }
 
         /* Hlavička a Navigace */
@@ -151,6 +163,17 @@
         .btn-secondary { background: #eef2f7; color: var(--text-dark); border: 1px solid #d0dbe7; }
         .btn-secondary:hover { background: #e2eaf4; }
 
+        /* --- ZÁPATÍ (FOOTER) --- */
+        footer {
+            background-color: var(--primary);
+            color: #a0a5aa;
+            text-align: center;
+            padding: 25px 20px;
+            margin-top: auto; /* Přitlačí footer dolů a eliminuje mezery */
+            border-top: 3px solid var(--accent);
+            font-size: 0.9rem;
+        }
+
         #bublina { 
             position: fixed; 
             bottom: 30px; 
@@ -229,7 +252,7 @@
         </div>
         <nav id="nav-menu">
             <a href="index.html">Domů</a>
-            <a href="produkty.html">PC sestavy</a>
+            <a href="produkty.html" class="active">PC sestavy</a>
             <a href="komponenty.html">Komponenty</a>
             <a href="servis.html">Servis</a>
             <a href="o_nas.html">O nás</a>
@@ -274,6 +297,11 @@
         </article>
     </div>
 </div>
+
+<!-- ZÁPATÍ (FOOTER) -->
+<footer>
+    &copy; 2026 Počítače z Moravy. Všechna práva vyhrazena.
+</footer>
 
 <div id="bublina"></div>
 
@@ -327,6 +355,7 @@
                 } else {
                     btnEl.disabled = false;
                     btnEl.innerText = "Do košíku";
+                    btnEl.style.background = "";
                     btnEl.onclick = () => pridatDoKosiku(pc.nazev, pc.cena, `img/${klic}.jpg`, klic);
                 }
             }
