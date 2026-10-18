@@ -5,22 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Počítače z Moravy</title>
     
-    <link rel="icon" type="image/jpeg" href="img/logo.jpg">
+    <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/pocitacezmoravy/WEB/main/img/loga/logo.jpg">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     
     <style>
-        /* Barevná paleta laděná podle loga a moravských barev */
+        /* Barevná paleta podle loga + e-shopové prvky z fotky */
         :root {
-            --primary: #1b2a4a;        /* Hluboká tmavě modrá (moravská modř) */
-            --primary-hover: #111b30;  /* Tmavší modrá pro hover */
-            --accent: #d32f2f;         /* Moravská červená */
-            --accent-hover: #b71c1c;   /* Tmavší červená */
-            --gold: #fbc02d;           /* Zlatý akcent */
-            --bg-light: #f4f6f9;       /* Jemné pozadí */
-            --text-dark: #2c3e50;      /* Hlavní text */
+            --primary: #1a1d20;        /* Tmavý antracit */
+            --accent: #f4b41a;         /* Zlatavě žlutá */
+            --accent-hover: #e09f0e;   
+            --btn-green: #5ca800;      /* Zelené tlačítko do košíku z fotky */
+            --btn-green-hover: #4a8800;
+            --cyan-arrow: #00a8cc;     /* Tyrkysové tlačítko posunu z fotky */
+            --bg-light: #f4f6f8;       /* Světlé pozadí */
+            --text-dark: #212529;      
             --white: #ffffff;
+            --price-red: #d32f2f;      /* Červená cena */
         }
 
         /* Základní styly */
@@ -33,7 +35,7 @@
             color: var(--text-dark); 
         }
         .container { 
-            max-width: 1100px; 
+            max-width: 1200px; 
             margin: 0 auto; 
             padding: 0 20px; 
         }
@@ -65,7 +67,7 @@
             transition: transform 0.2s ease; 
         }
         .logo a:hover { transform: scale(1.02); }
-        .logo img { height: 90px; width: auto; margin-right: 15px; display: block; border-radius: 6px; border: 2px solid var(--gold); }
+        .logo img { height: 80px; width: auto; margin-right: 15px; display: block; border-radius: 6px; border: 2px solid var(--accent); }
         .logo h1 { margin: 0; font-size: 1.5rem; letter-spacing: 1px; font-weight: 700; }
         
         nav { display: flex; align-items: center; }
@@ -76,7 +78,7 @@
             font-weight: 500; 
             transition: color 0.3s; 
         }
-        nav a:hover { color: var(--gold); }
+        nav a:hover { color: var(--accent); }
 
         /* Mobilní menu tlačítko */
         .menu-toggle { 
@@ -102,82 +104,226 @@
         /* Hero sekce */
         .hero { 
             background: var(--white); 
-            padding: 50px 0; 
+            padding: 40px 0; 
             text-align: center; 
-            border-bottom: 4px solid var(--accent); 
-            margin-bottom: 40px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border-bottom: 3px solid #e0e0e0; 
+            margin-bottom: 30px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
-        .hero h2 { margin-top: 0; font-size: 2.2rem; color: var(--primary); }
-        .hero p { font-size: 1.1rem; color: #555; }
+        .hero h2 { margin-top: 0; font-size: 2rem; color: var(--text-dark); }
+        .hero p { font-size: 1.1rem; color: #666; margin-bottom: 0; }
+
+        /* DECENTNÍ BOX PRO NOVĚ NASKLADNĚNÉ */
+        .sekce-novinky-box {
+            background: linear-gradient(180deg, rgba(244, 180, 26, 0.08) 0%, rgba(255,255,255,0) 100%);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 35px;
+            border: 1px solid rgba(244, 180, 26, 0.25);
+        }
+
+        .sekce-nadpis-wrapper {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .badge-novinka {
+            display: inline-block;
+            background: var(--accent);
+            color: #1a1d20;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 8px;
+        }
 
         .sekce-nadpis {
             text-align: center;
             font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin: 0 0 30px 0;
-            position: relative;
-        }
-        .sekce-nadpis::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 3px;
-            background: var(--accent);
-            margin: 8px auto 0 auto;
-            border-radius: 2px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin: 0;
         }
 
-        /* Produkty Grid */
+        /* Produkty Grid pro novinky */
         .product-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 30px; 
-            margin-bottom: 60px; 
+            gap: 25px; 
         }
         .product-card { 
             background: var(--white); 
-            padding: 25px; 
+            padding: 20px; 
             border-radius: 12px; 
             text-align: center; 
             transition: all 0.3s ease; 
             display: flex; 
             flex-direction: column; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-            border-top: 4px solid transparent;
+            border-top: 4px solid var(--accent);
         }
         .product-card:hover { 
-            transform: translateY(-8px); 
-            box-shadow: 0 12px 25px rgba(0,0,0,0.1); 
-            border-top-color: var(--accent);
+            transform: translateY(-5px); 
+            box-shadow: 0 12px 20px rgba(0,0,0,0.1); 
         }
         .product-link { text-decoration: none; color: inherit; display: block; flex-grow: 1; }
-        .product-card img { width: 100%; height: 180px; object-fit: contain; margin-bottom: 20px; }
-        
+        .product-card img { width: 100%; height: 160px; object-fit: contain; margin-bottom: 15px; }
         .sklad-info { font-size: 0.85rem; margin-bottom: 5px; font-weight: bold; }
-        .cena-text { font-size: 1.4rem; color: var(--primary); margin: 10px 0; }
+        .cena-text { font-size: 1.3rem; color: var(--price-red); margin: 8px 0; font-weight: bold; }
 
         .btn { 
-            padding: 14px 20px; 
+            padding: 12px 15px; 
             border: none; 
             cursor: pointer; 
-            border-radius: 8px; 
+            border-radius: 6px; 
             font-weight: bold; 
             text-transform: uppercase; 
-            font-size: 0.9rem; 
+            font-size: 0.85rem; 
             transition: all 0.3s; 
-            margin-top: 10px; 
+            margin-top: 8px; 
             width: 100%; 
             text-decoration: none; 
             display: inline-block; 
             box-sizing: border-box; 
         }
-        .btn-primary { background: var(--accent); color: white; }
-        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-primary { background: var(--btn-green); color: white; }
+        .btn-primary:hover { background: var(--btn-green-hover); }
         .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
-        .btn-secondary { background: #eef2f7; color: var(--primary); border: 1px solid #d0dbe7; }
+        .btn-secondary { background: #eef2f7; color: var(--text-dark); border: 1px solid #d0dbe7; }
         .btn-secondary:hover { background: #e2eaf4; }
+
+        /* ŘÁDKOVÉ BLOKY PODLE E-SHOPOVÉHO VZORU */
+        .eshop-row-block {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 20px 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .row-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin: 0 0 15px 0;
+        }
+
+        .carousel-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .product-carousel {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 10px 0;
+            width: 100%;
+            scrollbar-width: none;
+        }
+        .product-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .eshop-card {
+            flex: 0 0 210px;
+            background: var(--white);
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .eshop-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+        }
+
+        .eshop-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .eshop-card-title {
+            font-size: 0.85rem;
+            color: #333;
+            text-decoration: none;
+            line-height: 1.3;
+            height: 34px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            margin-bottom: 8px;
+        }
+
+        .stars {
+            color: #f4b41a;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+        .rating-count { color: #777; font-size: 0.75rem; }
+
+        .price-box { margin: 8px 0; }
+        .old-price {
+            text-decoration: line-through;
+            color: #888;
+            font-size: 0.8rem;
+            margin-bottom: 2px;
+        }
+        .current-price {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--price-red);
+        }
+
+        .btn-add-cart {
+            background: var(--btn-green);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+        .btn-add-cart:hover { background: var(--btn-green-hover); }
+
+        .arrow-next {
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--cyan-arrow);
+            color: white;
+            border: none;
+            width: 35px;
+            height: 60px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        .arrow-next:hover { background: #0088a8; }
 
         #bublina { 
             position: fixed; 
@@ -193,7 +339,7 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.3); 
             transition: opacity 0.3s; 
             white-space: nowrap;
-            border: 2px solid var(--gold);
+            border: 2px solid var(--accent);
         }
 
         /* RESPONSIVITA */
@@ -239,9 +385,7 @@
             nav a:last-child { border-bottom: none; }
 
             .hero { padding: 30px 15px; margin-bottom: 20px; }
-            .hero h2 { font-size: 1.6rem; }
-            .product-grid { padding: 0 10px; }
-            .sekce-nadpis { font-size: 1.5rem; }
+            .arrow-next { right: 0; width: 28px; height: 45px; }
         }
     </style>
 </head>
@@ -251,7 +395,7 @@
     <div class="header-full-width">
         <div class="logo">
             <a href="index.html">
-                <img src="img/logo.jpg" alt="Logo">
+                <img src="https://raw.githubusercontent.com/pocitacezmoravy/WEB/main/img/loga/logo.jpg" alt="Logo">
                 <h1>Počítače z Moravy</h1>
             </a>
         </div>
@@ -276,50 +420,157 @@
 </div>
 
 <div class="container">
-    <h2 class="sekce-nadpis">Nově naskladněné</h2>
-</div>
 
-<div class="container">
-    <div class="product-grid">
-        <article class="product-card">
-            <a href="pc_1.html" class="product-link">
-                <img src="img/pc1.jpg" alt="PC 1">
-                <h3 id="nazev-pc_1">Načítání...</h3>
-            </a>
-            <p class="sklad-info" id="sklad-pc_1">Načítání skladu...</p>
-            <p class="cena-text"><strong id="cena-pc_1">----</strong> <strong>Kč</strong></p>
-            <a href="pc_1.html" class="btn btn-secondary">Specifikace</a>
-            <button class="btn btn-primary" id="btn-pc_1">Do košíku</button>
-        </article>
+    <!-- SEKCE: NOVĚ NASKLADNĚNÉ -->
+    <section class="sekce-novinky-box">
+        <div class="sekce-nadpis-wrapper">
+            <span class="badge-novinka">🔥 Novinky v nabídce</span>
+            <h2 class="sekce-nadpis">Nově naskladněné</h2>
+        </div>
 
-        <article class="product-card">
-            <a href="pc_2.html" class="product-link">
-                <img src="img/pc2.jpg" alt="PC 2">
-                <h3 id="nazev-pc_2">Načítání...</h3>
-            </a>
-            <p class="sklad-info" id="sklad-pc_2">Načítání skladu...</p>
-            <p class="cena-text"><strong id="cena-pc_2">----</strong> <strong>Kč</strong></p>
-            <a href="pc_2.html" class="btn btn-secondary">Specifikace</a>
-            <button class="btn btn-primary" id="btn-pc_2">Do košíku</button>
-        </article>
+        <div class="product-grid">
+            <article class="product-card">
+                <a href="pc_1.html" class="product-link">
+                    <img src="img/pc1.jpg" alt="PC 1">
+                    <h3 id="nazev-pc_1">Načítání...</h3>
+                </a>
+                <p class="sklad-info" id="sklad-pc_1">Načítání skladu...</p>
+                <p class="cena-text"><strong id="cena-pc_1">----</strong> <strong>Kč</strong></p>
+                <a href="pc_1.html" class="btn btn-secondary">Specifikace</a>
+                <button class="btn btn-primary" id="btn-pc_1">Do košíku</button>
+            </article>
 
-        <article class="product-card">
-            <a href="pc_3.html" class="product-link">
-                <img src="img/pc3.jpg" alt="PC 3">
-                <h3 id="nazev-pc_3">Načítání...</h3>
-            </a>
-            <p class="sklad-info" id="sklad-pc_3">Načítání skladu...</p>
-            <p class="cena-text"><strong id="cena-pc_3">----</strong> <strong>Kč</strong></p>
-            <a href="pc_3.html" class="btn btn-secondary">Specifikace</a>
-            <button class="btn btn-primary" id="btn-pc_3">Do košíku</button>
-        </article>
-    </div>
+            <article class="product-card">
+                <a href="pc_2.html" class="product-link">
+                    <img src="img/pc2.jpg" alt="PC 2">
+                    <h3 id="nazev-pc_2">Načítání...</h3>
+                </a>
+                <p class="sklad-info" id="sklad-pc_2">Načítání skladu...</p>
+                <p class="cena-text"><strong id="cena-pc_2">----</strong> <strong>Kč</strong></p>
+                <a href="pc_2.html" class="btn btn-secondary">Specifikace</a>
+                <button class="btn btn-primary" id="btn-pc_2">Do košíku</button>
+            </article>
+
+            <article class="product-card">
+                <a href="pc_3.html" class="product-link">
+                    <img src="img/pc3.jpg" alt="PC 3">
+                    <h3 id="nazev-pc_3">Načítání...</h3>
+                </a>
+                <p class="sklad-info" id="sklad-pc_3">Načítání skladu...</p>
+                <p class="cena-text"><strong id="cena-pc_3">----</strong> <strong>Kč</strong></p>
+                <a href="pc_3.html" class="btn btn-secondary">Specifikace</a>
+                <button class="btn btn-primary" id="btn-pc_3">Do košíku</button>
+            </article>
+        </div>
+    </section>
+
+    <!-- SEKCE: VYBRALI JSME PRO VÁS -->
+    <section class="eshop-row-block">
+        <h2 class="row-title">Vybrali jsme pro vás</h2>
+        <div class="carousel-wrapper">
+            <div class="product-carousel" id="carousel-vybrali">
+                <article class="eshop-card">
+                    <img src="img/pc1.jpg" alt="Operační paměť">
+                    <a href="pc_1.html" class="eshop-card-title" id="nazev-vybrali-pc_1">Načítání...</a>
+                    <div class="stars">★★★★★ <span class="rating-count">(1)</span></div>
+                    <div class="price-box">
+                        <div class="old-price">5 990 Kč</div>
+                        <div class="current-price" id="cena-vybrali-pc_1">---- Kč</div>
+                    </div>
+                    <button class="btn-add-cart" id="btn-vybrali-pc_1">Vložit do košíku</button>
+                </article>
+
+                <article class="eshop-card">
+                    <img src="img/pc2.jpg" alt="PC 2">
+                    <a href="pc_2.html" class="eshop-card-title" id="nazev-vybrali-pc_2">Načítání...</a>
+                    <div class="stars">★★★★★ <span class="rating-count">(1)</span></div>
+                    <div class="price-box">
+                        <div class="old-price">7 990 Kč</div>
+                        <div class="current-price" id="cena-vybrali-pc_2">---- Kč</div>
+                    </div>
+                    <button class="btn-add-cart" id="btn-vybrali-pc_2">Vložit do košíku</button>
+                </article>
+
+                <article class="eshop-card">
+                    <img src="img/pc3.jpg" alt="PC 3">
+                    <a href="pc_3.html" class="eshop-card-title" id="nazev-vybrali-pc_3">Načítání...</a>
+                    <div class="stars">★★★★★ <span class="rating-count">(1)</span></div>
+                    <div class="price-box">
+                        <div class="old-price">8 990 Kč</div>
+                        <div class="current-price" id="cena-vybrali-pc_3">---- Kč</div>
+                    </div>
+                    <button class="btn-add-cart" id="btn-vybrali-pc_3">Vložit do košíku</button>
+                </article>
+
+                <article class="eshop-card">
+                    <img src="img/pc1.jpg" alt="Herní PC Special">
+                    <a href="#" class="eshop-card-title">Herní PC Morava Gamer RX</a>
+                    <div class="stars">☆☆☆☆☆ <span class="rating-count">(0)</span></div>
+                    <div class="price-box">
+                        <div class="old-price">18 990 Kč</div>
+                        <div class="current-price">16 490 Kč</div>
+                    </div>
+                    <button class="btn-add-cart">Vložit do košíku</button>
+                </article>
+            </div>
+            <button class="arrow-next" onclick="posunoutCarousel('carousel-vybrali')">❯</button>
+        </div>
+    </section>
+
+    <!-- SEKCE: DOPORUČUJEME -->
+    <section class="eshop-row-block">
+        <h2 class="row-title">Doporučujeme</h2>
+        <div class="carousel-wrapper">
+            <div class="product-carousel" id="carousel-doporucujeme">
+                <article class="eshop-card">
+                    <img src="img/pc3.jpg" alt="Skříň BitFenix">
+                    <a href="#" class="eshop-card-title">Počítačová skříň BitFenix CETO White</a>
+                    <div class="stars">☆☆☆☆☆ <span class="rating-count">(0)</span></div>
+                    <div class="price-box">
+                        <div class="old-price">1 410 Kč</div>
+                        <div class="current-price">1 040 Kč</div>
+                    </div>
+                    <button class="btn-add-cart">Vložit do košíku</button>
+                </article>
+
+                <article class="eshop-card">
+                    <img src="img/pc2.jpg" alt="Adaptér">
+                    <a href="#" class="eshop-card-title">Adaptér Axagon SLIM USB 5Gbps</a>
+                    <div class="stars">★★★★★ <span class="rating-count">(11)</span></div>
+                    <div class="price-box">
+                        <div class="old-price">229 Kč</div>
+                        <div class="current-price">211 Kč</div>
+                    </div>
+                    <button class="btn-add-cart">Vložit do košíku</button>
+                </article>
+
+                <article class="eshop-card">
+                    <img src="img/pc1.jpg" alt="RAM Kingston">
+                    <a href="#" class="eshop-card-title">Operační paměť Kingston FURY Renegade</a>
+                    <div class="stars">★★★★★ <span class="rating-count">(5)</span></div>
+                    <div class="price-box">
+                        <div class="old-price">8 419 Kč</div>
+                        <div class="current-price">8 312 Kč</div>
+                    </div>
+                    <button class="btn-add-cart">Vložit do košíku</button>
+                </article>
+            </div>
+            <button class="arrow-next" onclick="posunoutCarousel('carousel-doporucujeme')">❯</button>
+        </div>
+    </section>
+
 </div>
 
 <div id="bublina"></div>
 
 <script>
-    // Mobilní menu logika
+    // Posun v karuselu
+    function posunoutCarousel(id) {
+        const elem = document.getElementById(id);
+        elem.scrollBy({ left: 230, behavior: 'smooth' });
+    }
+
+    // Mobilní menu
     const mobileMenu = document.getElementById('mobile-menu');
     const navMenu = document.getElementById('nav-menu');
     
@@ -355,6 +606,8 @@
         produktyKlice.forEach(klic => {
             const pc = produkty[klic];
             if(!pc) return;
+            
+            // Propojení sekce "Nově naskladněné"
             const nazevEl = document.getElementById('nazev-' + klic);
             const infoEl = document.getElementById('sklad-' + klic);
             const cenaEl = document.getElementById('cena-' + klic);
@@ -375,6 +628,25 @@
                     btnEl.disabled = false;
                     btnEl.innerText = "Do košíku";
                     btnEl.onclick = () => pridatDoKosiku(pc.nazev, pc.cena, `img/${klic}.jpg`, klic);
+                }
+            }
+
+            // Propojení sekce "Vybrali jsme pro vás"
+            const nazevVybrali = document.getElementById('nazev-vybrali-' + klic);
+            const cenaVybrali = document.getElementById('cena-vybrali-' + klic);
+            const btnVybrali = document.getElementById('btn-vybrali-' + klic);
+
+            if(nazevVybrali) nazevVybrali.innerText = pc.nazev;
+            if(cenaVybrali) cenaVybrali.innerText = pc.cena.toLocaleString('cs-CZ') + " Kč";
+            if(btnVybrali) {
+                if(pc.sklad <= 0) {
+                    btnVybrali.disabled = true;
+                    btnVybrali.innerText = "Vyprodáno";
+                    btnVybrali.style.background = "#ccc";
+                } else {
+                    btnVybrali.disabled = false;
+                    btnVybrali.innerText = "Vložit do košíku";
+                    btnVybrali.onclick = () => pridatDoKosiku(pc.nazev, pc.cena, `img/${klic}.jpg`, klic);
                 }
             }
         });
